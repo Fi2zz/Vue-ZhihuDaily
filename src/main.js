@@ -1,7 +1,19 @@
 import Vue from 'vue'
 import App from './App.vue'
 
+import VueResource from 'vue-resource'
+
+
+Vue.use(VueResource);
+
+
 new Vue({
-  el: '#app',
-  render: h => h(App)
+    el: '#app',
+    mounted(){
+        console.log('get')
+        this.$http.get('https://zhihu-daily.leanapp.cn/api/v1/last-stories').then(res => {
+            console.log(res)
+        })
+    },
+    render: h => h(App)
 })
