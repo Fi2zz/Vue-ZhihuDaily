@@ -8,6 +8,7 @@ const headers = {
 module.exports = function client(opts) {
     let method = opts.method ? opts.method.toLowerCase() : 'get';
     let https = opts.https || false;
+    let data = opts.data ? querystring.stringify(opts.data) : ''
     if (method === 'post') {
         headers['Content-Length'] = Buffer.byteLength(data) //返回字符串实际占据的字节长度
     }
@@ -19,7 +20,7 @@ module.exports = function client(opts) {
     let options = {
         port: method === 'post' ? '8097' : 80,
         host: opts.host,
-        path: opts.path + querystring.stringify(opts.data),
+        path: opts.path + data,
         method: method.toUpperCase(),
         headers: headers
     };
@@ -40,7 +41,6 @@ module.exports = function client(opts) {
             res.on('error', err => reject(err));
         });
         if (method === 'post') {
-            let data = querystring.stringify(opts.data);
             req.write(data);
         }
         req.end();
