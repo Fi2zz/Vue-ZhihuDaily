@@ -3,7 +3,7 @@
         <div class="swiper-container app-list-swiper">
             <div class="swiper-wrapper">
                 <div class="swiper-lazy swiper-slide" v-for="item in top" :key="item.id"
-                     :style="setCoverStyle(item.image)"></div>
+                     :style="setCoverStyle(item.image)" @click="getArticle(item.id)"></div>
             </div>
             <div class="swiper-pagination"></div>
         </div>
