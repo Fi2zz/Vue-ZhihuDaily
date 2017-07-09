@@ -12,27 +12,22 @@ app.get('*', (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
     res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-
+    //获取当前的路由url
+    //https://github.com/search?utf8=%E2%9C%93&q=%E7%9F%A5%E4%B9%8E%E6%97%A5%E6%8A%A5+%E7%88%AC%E8%99%AB&type=
+    //https://github.com/izzyleung/ZhihuDailyPurify/wiki/%E7%9F%A5%E4%B9%8E%E6%97%A5%E6%8A%A5-API-%E5%88%86%E6%9E%90
     let route = req.url.substr(1);
-    let reg = /^article\//;
     let options = {
         host: host,
         path: `${api}`
     };
-
-
     if (route === '/prefetch-image') {
         level = 7;
         options.path = `${api}${level}/start-image/1080*1766`;
         options.data = {};
-
         client(options).then(response => {
             res.send(JSON.parse(response))
         }).then(err => res.send(`Error:${err}`))
-
     }
-
-
     if (route === 'latest') {
         level = 4;
         options.path += `${level}/news/latest`;
@@ -41,12 +36,11 @@ app.get('*', (req, res) => {
             res.send(JSON.parse(response))
         }).catch(err => res.send(`Error: ${err}`));
     }
-
     if (/^story(\/)(\S)/.test(route)) {
         level = 4;
         let params = req.url.split('/');
         let length = params.length;
-        console.log(length, params)
+        console.log({params})
         let lastParam = params[length - 1]
         //请求文章
         if (length <= 3) {
@@ -71,8 +65,6 @@ app.get('*', (req, res) => {
 
 
     }
-
-
     //文章额外信息，如评论点赞等
     if (/^(story-extra)/.test(route)) {
         let level = 4
@@ -89,9 +81,16 @@ app.get('*', (req, res) => {
     if (route === 'more-info') {
 
     }
-    console.log('current route:', route);
-    console.log('current route query:', req.query);
-    console.log('request options:\n' + JSON.stringify(options))
+
+    let info ={
+        route:route,
+        query:req.query
+    };
+    for(let key in options){
+        info[key]=options[key]
+    }
+
+    console.log(info)
 });
 
 function getStoryId(req) {
@@ -99,9 +98,7 @@ function getStoryId(req) {
     let getId = array[2].split('&');
     return getId[0];
 
-
 }
-
 app.listen(80);
 
 

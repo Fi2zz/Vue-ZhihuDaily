@@ -71,23 +71,36 @@
                 this.imageSource = data.image_source;
 
             });
-            this.fetchExtraInfo();
+            this.fetchExtraInfo(false);
         },
         methods: {
 
-            fetchExtraInfo(){
-                this.$http.get(this.storyExtra).then(res => {
-                    this.storyInfo = res.body;
-                });
-                //每一分钟查询一次最新的文章额外信息
-                setTimeout(() => {
-                    this.fetchExtraInfo()
-                }, 1000 * 60)
+            fetchExtraInfo(clear){
+                if (!clear) {
+                    this.$http.get(this.storyExtra).then(res => {
+                        this.storyInfo = res.body;
+                    });
+                    //每一分钟查询一次最新的文章额外信息
+                    this.timer = setTimeout(() => {
+                        this.fetchExtraInfo()
+                    }, 1000 * 60);
+
+                }
+                else {
+                    clearTimeout(this.timer)
+                }
             },
             viewComment(id){
-                let info =this.storyInfo
-                this.$router.push({path: `/story/${id}/comments`, query: {total:info.comments,long:info.long_comments}})
+                let info = this.storyInfo;
+                this.$router.push({
+                    path: `/story/${id}/comments`,
+                    query: {total: info.comments, long: info.long_comments}
+                })
             }
+        },
+        beforeRouteLeave(to,from,next){
+            this.fetchExtraInfo(true)
+            next()
         }
     }
 </script>
