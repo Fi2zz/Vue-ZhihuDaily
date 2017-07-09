@@ -6,47 +6,49 @@ const cheerio = require('cheerio')
 const host = "news-at.zhihu.com";
 const api = `/api/4/`;
 app.use(bodyParser.urlencoded({extended: false}));
-app.get('/cover', function () {
-});
-//最新消息
-app.get('/latest', function (req, res) {
-    let reqOpts = {
-        host: host,
-        path: `${api}news/latest`,
-        data: {},
-        // headers: {
-        //     'Authorization': 'Bearer',
-        //     'Referer': 'http://daily.zhihu.com/',
-        // }
-    };
+
+app.get('*', (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
     res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-    client(reqOpts).then(body =>{
-        res.send(JSON.parse(body))
-    }).catch(err => res.send(`Error: ${err}`));
-});
 
-
-//文章
-app.get('/article/:id', function (req, res) {
-    let reqOpts = {
+    let route = req.url;
+    let reg = /\/article\//;
+    let options = {
         host: host,
-        path: `${api}news/${req.params.id}`,
-        data: {},
+        path: `${api}`
     };
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
-    res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-    client(reqOpts).then(response => {
-        let data =JSON.parse(response);
-        res.send(data)
-    }).then(err => res.send(`Error:${err}`))
-});
-app.listen(80, function () {
-    console.log('run on http://localhost')
+
+
+    if(route){}
+
+
+    
+    if (route === '/latest') {
+        options.path += `news/latest`;
+        options.data = {};
+        client(options).then(response => {
+            res.send(JSON.parse(response))
+        }).catch(err => res.send(`Error: ${err}`));
+    }
+    if (reg.test(route)) {
+        let array = req.params[0].trim().split('/');
+        let getId = array[2].split('&');
+        let id = getId[0];
+        options.path += `news/${id}`
+        options.data = {};
+        client(options).then(response => {
+            let data = JSON.parse(response);
+            res.send(data)
+        }).then(err => res.send(`Error:${err}`))
+    }
+
+    console.log('current route:', route);
+    console.log('request options:\n' + JSON.stringify(options))
 });
 
+
+app.listen(80);
 
 
 
