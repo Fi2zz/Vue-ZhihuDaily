@@ -1,18 +1,37 @@
 <template>
-    <div class="view">
+    <div class="view view-article">
         <div class="app-article-main" ref="content" v-html="content.body"></div>
+
+
+        <div class="view-bar">
+            <div class="view-bar-wrap">
+                <div class="view-bar-item view-prev"><span class="icon icon-arrow-left"></span></div>
+                <div class="view-bar-item view-next"><span class="icon icon-arrow-down"></span></div>
+                <div class="view-bar-item view-like"><span class="icon icon-like"></span>
+                    <span class="text">{{storyInfo.popularity}}</span>
+                </div>
+                <div class="view-bar-item view-share"><span class="icon icon-share"></span></div>
+                <div class="view-bar-item view-comments" @click="viewComment(id)"><span
+                        class="icon icon-comment"></span>
+                    <span class="text">{{storyInfo.long_comments}}</span>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
     export default{
-        name: 'article',
+        name: 'story',
         data(){
             return {
                 content: '',
                 url: `${this.$uri}${this.$query.article}/`,
                 id: this.$route.params.id,
-                title:'',
-                imageSource:'',
+                title: '',
+                imageSource: '',
+                storyExtra: `${this.$uri}${this.$query.storyExtra}${this.$route.params.id}`,
+                storyInfo: {},
+                cached: false
             }
         },
         watch: {
@@ -45,29 +64,30 @@
             }
         },
         created(){
-            let id = this.$route.params.id;
-            this.$http.get(this.url + id).then(res => {
-
+            this.$http.get(this.url + this.id).then(res => {
                 let data = res.body;
+                this.content = res.body;
+                this.title = data.title;
+                this.imageSource = data.image_source;
 
+            });
+            this.fetchExtraInfo();
+        },
+        methods: {
 
-                let css = data.css;
-
-                //使用知乎日报官方样式表
-                for (let i of css) {
-                    let style = document.createElement('link');
-                    let head = document.head;
-                    head.appendChild(style)
-                    style.type = 'text/css';
-                    style.rel = 'stylesheet';
-                    style.href = i
-                }
-                this.content = res.body
-                this.title=data.title
-                this.imageSource =data.image_source
-
-
-            })
+            fetchExtraInfo(){
+                this.$http.get(this.storyExtra).then(res => {
+                    this.storyInfo = res.body;
+                });
+                //每一分钟查询一次最新的文章额外信息
+                setTimeout(() => {
+                    this.fetchExtraInfo()
+                }, 1000 * 60)
+            },
+            viewComment(id){
+                let info =this.storyInfo
+                this.$router.push({path: `/story/${id}/comments`, query: {total:info.comments,long:info.long_comments}})
+            }
         }
     }
 </script>

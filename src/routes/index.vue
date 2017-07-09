@@ -36,24 +36,33 @@
                 stories: [],
                 top: [],
                 url: `${this.$uri}${this.$query.list}`,
+                appCover:`${this.$uri}${this.$query.cover}`,
                 lazyLoading: 'http://static.daily.zhihu.com/img/new_home_v3/mobile_top_logo.png'
             }
         },
+
         created(){
+
+            console.log(this.appCover)
+            this.$http.get(this.appCover).then(res=>{
+                console.log(res)
+            })
+        },
+        mounted(){
+
             this.$http.get(this.url).then(res => {
                 let data = res.body;
                 this.stories = data.stories
                 this.top = data.top_stories
             })
-        },
-        mounted(){
+
             this.$nextTick(() => {
                 new Swiper('.swiper-container', this.swipeOpts)
             })
         },
         methods: {
             getArticle(id){
-                this.$router.push({path: `/${id}`});
+                this.$router.push({path: `/story/${id}`});
             },
             setCoverStyle(image){
                 return {

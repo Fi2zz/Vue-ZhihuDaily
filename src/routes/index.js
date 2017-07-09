@@ -2,7 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import Index from  './index.vue'
-import Article from './article.vue'
+import ArticleItem from './article.vue'
+import Comment from './article-comments.vue'
 Vue.use(Router);
 
 export default new Router({
@@ -13,9 +14,14 @@ export default new Router({
             component: Index
         },
         {
-            path: "/:id",
+            path: "/story/:id",
             name: 'article',
-            component: Article
+            component: ArticleItem
+        },
+        {
+            path: '/story/:id/comments',
+            name: 'comments',
+            component: Comment
         }
     ]
 })

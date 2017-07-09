@@ -1,17 +1,65 @@
-
 @import "./normallize.styl"
+
+@font-face {
+  font-family: 'iconfont';  /* project id 348699 */
+  src: url('//at.alicdn.com/t/font_uifyyu3xd7fu5wmi.eot');
+  src: url('//at.alicdn.com/t/font_uifyyu3xd7fu5wmi.eot?#iefix') format('embedded-opentype'),
+          url('//at.alicdn.com/t/font_uifyyu3xd7fu5wmi.woff') format('woff'),
+          url('//at.alicdn.com/t/font_uifyyu3xd7fu5wmi.ttf') format('truetype'),
+          url('//at.alicdn.com/t/font_uifyyu3xd7fu5wmi.svg#iconfont') format('svg');
+}
+
+.icon {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-arrow-left:before {
+  content: "\e697";
+}
+
+.icon-comment:before {
+  content: "\e69b";
+}
+
+.icon-arrow-down:before {
+  content: "\e6a6";
+}
+
+.icon-like:before {
+  content: "\e717";
+}
+
+.icon-share:before {
+  content: "\e71d";
+}
 
 img
   display: block
   max-width 100%
+
+a
+  text-decoration: none
+
+html,body
+  width: 100%
+  height: 100%
+
 body
   max-width 420px
   margin auto !important
-  background #222!important
+  background #222 !important
 
   #app
     width: 100%
     background #fff
+    min-height 100%
+  .view-article
+    padding-bottom 44px
+
 @import "./list.styl"
 @import "./article.styl"
-
+@import "./article-comment.styl"
