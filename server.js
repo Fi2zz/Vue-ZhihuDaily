@@ -99,7 +99,10 @@ function getStoryId(req) {
     return getId[0];
 
 }
-app.listen(80);
+
+app.listen(8000,function () {
+  console.log(`> Server is running on http://localhost:8000`)
+});
 
 
 
