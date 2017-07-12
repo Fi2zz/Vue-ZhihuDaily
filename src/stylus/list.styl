@@ -1,3 +1,4 @@
+@import "./vars/vars.styl"
 .app
   &-list
     &-view
@@ -46,3 +47,37 @@
             border: none
     &-swiper
       height 240px
+
+.list-view
+  .view-title
+    z-index: 9
+    height: 44px
+    display: none
+
+    &-active
+      position: fixed
+      top: 0
+      right: 0
+      left: 0
+      display: block
+
+    &-wrap
+      height: 44px
+      max-width 420px
+      margin auto
+      line-height 44px
+      background: none
+      color #fff
+      text-align: center
+      font-size: 16px
+      transition all ease 300ms
+      &-active
+        background $brand-primary
+
+  &-title
+    text-align: center
+    background $brand-primary
+    color $brand-default
+    height 44px
+    font-size 16px
+    line-height 44px

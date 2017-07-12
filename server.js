@@ -1,6 +1,9 @@
 const express = require('express')
 const app = express();
 const bodyParser = require("body-parser");
+const cors = require('cors')
+
+
 const client = require('./http-client');
 const cheerio = require('cheerio')
 const host = "news-at.zhihu.com";
@@ -8,10 +11,23 @@ const api = `/api/`;
 let level = 4;
 app.use(bodyParser.urlencoded({extended: false}));
 
+app.use(cors({
+  origin:'*',
+  methods:['GET','POST']
+}))
+
+//处理跨域
+// app.use(function (req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
+//   res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+//   next();
+// });
+
+
+
+
 app.get('*', (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
-  res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
   //获取当前的路由url
   //https://github.com/search?utf8=%E2%9C%93&q=%E7%9F%A5%E4%B9%8E%E6%97%A5%E6%8A%A5+%E7%88%AC%E8%99%AB&type=
   // https://github.com/izzyleung/ZhihuDailyPurify
@@ -36,6 +52,17 @@ app.get('*', (req, res) => {
       res.send(JSON.parse(response))
     }).catch(err => res.send(`Error: ${err}`));
   }
+
+  if (/^before/.test(route)) {
+    let level = 4;
+    options.path += `${level}/news/${route}`;
+    options.data = ''
+    client(options).then(body => {
+      res.send(JSON.parse(body))
+    })
+  }
+
+
   if (/^story(\/)(\S)/.test(route)) {
     level = 4;
     let params = req.url.split('/');
@@ -97,7 +124,6 @@ function getStoryId(req) {
   let array = req.params[0].trim().split('/');
   let getId = array[2].split('&');
   return getId[0];
-
 }
 
 app.listen(8000, function () {
