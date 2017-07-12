@@ -12,8 +12,8 @@ let level = 4;
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.use(cors({
-  origin:'*',
-  methods:['GET','POST']
+  origin: '*',
+  methods: ['GET', 'POST']
 }))
 
 //处理跨域
@@ -23,8 +23,6 @@ app.use(cors({
 //   res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
 //   next();
 // });
-
-
 
 
 app.get('*', (req, res) => {
