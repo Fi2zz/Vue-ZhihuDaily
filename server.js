@@ -25,7 +25,7 @@ app.use(cors({
 // });
 
 
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
   //获取当前的路由url
   //https://github.com/search?utf8=%E2%9C%93&q=%E7%9F%A5%E4%B9%8E%E6%97%A5%E6%8A%A5+%E7%88%AC%E8%99%AB&type=
   // https://github.com/izzyleung/ZhihuDailyPurify
@@ -34,6 +34,16 @@ app.get('*', (req, res) => {
     host: host,
     path: `${api}`
   };
+
+
+
+  if(req.url ==='/'){
+
+    res.send('hello ecs')
+  }
+
+
+
   if (route === '/prefetch-image') {
     level = 7;
     options.path = `${api}${level}/start-image/1080*1766`;
@@ -114,7 +124,6 @@ app.get('*', (req, res) => {
   }
 
   console.log(info)
-  // res.end()
 
 });
 
@@ -124,7 +133,12 @@ function getStoryId(req) {
   return getId[0];
 }
 
-app.listen(8000, function () {
+let address = '60.205.167.155'
+
+
+app.listen(address, function () {
+
+  console.log('> Server is Running on http://'+address)
   console.log(`> Server is running on http://localhost:8000`)
 });
 

@@ -1,24 +1,27 @@
 <template>
   <div class="view list-view">
+    <div class="view-title">
+      <div class="view-title-wrap" :class="{'view-title-wrap-active':viewTitleActivated}">
+        今日热闻
+      </div>
+    </div>
     <div class="view-swiper" style="position: relative; z-index: 7;">
       <div class="swiper-container app-list-swiper">
         <div class="swiper-wrapper">
-          <div class="swiper-lazy swiper-slide" v-for="item in top" :key="item.id"
+          <div class="swiper-lazy swiper-slide" v-for="item in hot" :key="item.id"
                :style="setCoverStyle(item.image)" @click="getArticle(item.id)"></div>
         </div>
         <div class="swiper-pagination"></div>
       </div>
     </div>
-    <div class="view-list">
-      <template v-for="view in viewStories">
-        <div> {{view}} \n
-        </div>
-        <div class="view-list-title view-list-title-active" ref="viewTitle">
+    <div class="view-list" ref="viewList">
+      <template v-for="(view,index) in viewStories">
+        <div class="view-list-title" v-show="index>0">
           <div class="view-list-title-wrap">
             {{view.title}}
           </div>
         </div>
-        <ol class="view-list-list" ref="viewList">
+        <ol class="view-list-list">
           <li class="view-list-item" v-for="item in view.list" @click="getArticle(item.id,index)">
             <h3 class="view-list-item-title">
               {{item.title}}
@@ -30,10 +33,17 @@
         </ol>
       </template>
     </div>
-
-
   </div>
 </template>
+
+<style>
+
+  * {
+    word-wrap: break-word;
+    word-break: break-all;
+  }
+
+</style>
 <script>
   import Swiper from 'swiper'
   import '../../node_modules/swiper/dist/css/swiper.min.css'
@@ -55,6 +65,7 @@
         state: this.$store.state,
         fetched: false,
         viewStories: this.$store.state.stories,
+        viewTitleActivated: false
       }
     },
     watch: {
@@ -62,21 +73,21 @@
         let viewDate = this.viewStories[0].date;
         if (fetched) {
           if (!isNaN(Number(viewDate))) {
-            viewDate -= 1;
-            this.commit('fetchData', {name: 'last-date', vm: this, date: viewDate})
+            this.commit('fetchData', {name: 'last-date', vm: this, date: viewDate - 1})
           }
         }
       },
       viewStories: {
         deep: true,
-        handler(da){
-          this.fetched = this.state.isFetched
+        handler(views){
+          if (views.length === 1) {
+            this.fetched = this.state.isFetched
+          }
         }
       }
-
     },
     computed: {
-      top(){
+      hot(){
         let store = this.state.tops;
         if (!store) {
           return []
@@ -88,8 +99,7 @@
     mounted(){
       this.$nextTick(() => {
         new Swiper('.swiper-container', this.swipeOpts)
-
-      })
+      });
       window.addEventListener('scroll', this.getScrollState, false)
     },
     beforeRouteEnter(to, from, next){
@@ -101,8 +111,18 @@
       getScrollState(){
         let scrollTop = window.scrollY;
         this.$nextTick(() => {
-          let scrollViewTitle = this.$refs['viewTitle'],
-            scrollViewList = this.$refs['viewList'];
+          let scrollViewList = this.$refs['viewList'];
+          let scrollViewTitle = scrollViewList.querySelectorAll('.view-list-title');
+
+          console.log(this.$el.getBoundingClientRect().top, window.scrollY);
+
+          let scrollTop = window.scrollY;
+          if (scrollTop >= 44) {
+            this.viewTitleActivated = true
+            scrollViewTitle[0].style.display = 'block';
+          } else {
+            this.viewTitleActivated = false
+          }
         });
       },
       getArticle(id, index){
@@ -110,30 +130,6 @@
       },
       commit(cmd, value){
         this.$store.commit(cmd, value)
-      },
-      getDate(string){
-        let currDate = new Date();
-        let year, month, date;
-        if (!string) {
-          year = currDate.getFullYear()
-          month = currDate.getMonth()
-          date = currDate.getDate()
-        }
-        year = Number(string.substring(0, 4));
-        month = Number(string.substring(4, 6));
-        date = Number(string.substring(6, 8));
-        let appDate = new Date(year, month - 1, date);
-        let currDateTime = new Date(currDate.getFullYear(), currDate.getMonth(), currDate.getDate()).getTime();
-        let appDateTime = appDate.getTime();
-
-
-        let isCurrentDate = currDateTime === appDateTime;
-        let week = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六',];
-        return isCurrentDate ? '今日新闻'
-          : `${appDate.getFullYear()}年
-               ${this.$padding(appDate.getMonth() + 1)}月
-               ${appDate.getDate()}日
-               ${week[appDate.getDay()]}`;
       },
       setCoverStyle(image){
         return {

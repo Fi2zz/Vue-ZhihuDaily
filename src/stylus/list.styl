@@ -1,5 +1,19 @@
 @import "./vars/vars.styl"
 .view
+  &-title
+    text-align: center
+    height 44px
+    font-size 16px
+    line-height 44px
+    position: fixed
+    top: 0
+    right: 0
+    left: 0
+    z-index: 9
+    &-wrap
+      color $brand-default
+      &-active
+        background $brand-primary
   &-list
     &-list
       list-style-type: none
@@ -49,32 +63,29 @@
     height 240px
     .swiper-slide
       height: 240px
+
 .view-list-title
-    z-index: 9
+  z-index: 9
+  height: 44px
+  &-active
+    position: fixed
+    top: 0
+    right: 0
+    left: 0
+    display: block
+  &-wrap
     height: 44px
-    display: none
-    &-active
-      position: fixed
-      top: 0
-      right: 0
-      left: 0
-      display: block
-    &-wrap
-      height: 44px
-      max-width 420px
-      margin auto
-      line-height 44px
-      background: none
-      color #fff
-      text-align: center
-      font-size: 16px
-      transition all ease 300ms
-      &-active
-        background $brand-primary
-  &-title
-    text-align: center
-    background $brand-primary
-    color $brand-default
-    height 44px
-    font-size 16px
+    max-width 420px
+    margin auto
     line-height 44px
+    background: none
+    color #fff
+    text-align: center
+    font-size: 16px
+    transition all ease 300ms
+    background $brand-primary
+    &-active
+      background $brand-primary
+
+
+

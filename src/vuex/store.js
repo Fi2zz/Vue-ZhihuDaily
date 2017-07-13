@@ -16,7 +16,7 @@ const routes = {
 console.log(routes)
 
 
-function getDate(string,vm) {
+function getDate(string, vm) {
   let currDate = new Date();
   let year, month, date;
   if (!string) {
@@ -44,19 +44,39 @@ function getDate(string,vm) {
 
 export default  new Vuex.Store({
   state: {
+    hot: [],
     stories: [],
     tops: [],
+    currentDate: null,
     currentIndex: 0,
     currentId: null,
     date: [],
     isFetched: false,
     ready: false,
+    story: {
+      id: '',
+      content: '',
+      info: {
+        likes: '',
+        popuplarity: '',
+        comments: ''
+      }
+    },
+    comments: {
+      long: [],
+      short: [],
+      total: ''
+    },
 
   },
   mutations: {
-    setStories(state, payload){
-      state.stories = payload
-      console.log(state, payload)
+    routeing(state, payload){
+
+
+    },
+    fetchStory(state, payload){
+    },
+    fetchComment(state, payload){
     },
     fetchData(state, payload){
       let vm = payload.vm,
@@ -66,13 +86,14 @@ export default  new Vuex.Store({
           let data = res.body || res.data;
           // state.stories = data.stories;
           state.tops = data.top_stories;
+          state.hot = data.tops_stories;
           // state.date = data.date;
           state.isFetched = true;
           state.ready = true
           state.stories.push({
             date: data.date,
             list: data.stories,
-            title: getDate(data.date,vm)
+            // title: getDate(data.date, vm)
           })
         })
       }
@@ -80,12 +101,12 @@ export default  new Vuex.Store({
         let date = payload.date;
         vm.$http.get(`${routes.uri}${routes.before}/${date}`).then(res => {
           let data = res.body;
-
           state.stories.push({
             date: data.date,
             list: data.stories,
-            title: getDate(data.date,vm)
-          })
+            title: getDate(data.date, vm)
+          });
+          state.currentDate = data.date;
         })
       }
     }
