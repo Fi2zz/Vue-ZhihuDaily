@@ -24,12 +24,6 @@ app.use(cors({
 //   next();
 // });
 
-app.get('/',(req,res)=>{
-
-  res.send('hello')
-
-})
-
 app.get('*', (req, res) => {
   //获取当前的路由url
   //https://github.com/search?utf8=%E2%9C%93&q=%E7%9F%A5%E4%B9%8E%E6%97%A5%E6%8A%A5+%E7%88%AC%E8%99%AB&type=
@@ -140,7 +134,7 @@ function getStoryId(req) {
 
 // let address = '127.0.0.1'//'60.205.167.155'
 
-let address ='60.205.167.155'
+let address ='localhost'
 
 app.listen(8000,address, function () {
   // console.log('> Server is Running on http://'+address)
