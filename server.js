@@ -136,7 +136,7 @@ function getStoryId(req) {
 let address = '60.205.167.155'
 
 
-app.listen(address, function () {
+app.listen(80,address, function () {
 
   console.log('> Server is Running on http://'+address)
   console.log(`> Server is running on http://localhost:8000`)
