@@ -24,6 +24,11 @@ app.use(cors({
 //   next();
 // });
 
+app.get('/',(req,res)=>{
+
+  res.send('hello')
+
+})
 
 app.get('*', (req, res) => {
   //获取当前的路由url
