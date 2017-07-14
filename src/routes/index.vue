@@ -62,6 +62,9 @@
   console.log(DEFAULT_LAST_SUNDAY)
   import debounce from '../debounce'
 
+  import _ from 'lodash'
+
+
 
   export default{
     name: 'index',

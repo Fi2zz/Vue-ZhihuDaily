@@ -17,6 +17,13 @@ function getDate(string) {
   return `${appDate.getFullYear()}年${padding(appDate.getMonth() + 1)}月${padding(appDate.getDate())}日 ${week[appDate.getDay()]}`;
 }
 
+
+
+
+
+
+
+
 export {
   getDate,
   padding
