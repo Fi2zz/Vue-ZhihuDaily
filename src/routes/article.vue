@@ -19,8 +19,13 @@
   </div>
 </template>
 <script>
+
+
+  import mixins  from '../mixins'
+
   export default{
     name: 'story',
+    mixins: [mixins],
     data(){
       return {
         content: '',
@@ -62,6 +67,20 @@
           }
         }
       }
+
+    },
+
+    beforeRouteEnter(to, from, next){
+
+
+      next(vm => {
+
+
+        vm.commit('fetchStory', {id: vm.id})
+
+      })
+
+
     },
     created(){
       this.$http.get(this.url + this.id).then(res => {
@@ -107,7 +126,7 @@
       }
     },
     beforeRouteLeave(to, from, next){
-      this.fetchExtraInfo(true)
+      this.fetchExtraInfo(true);
       next()
     }
   }

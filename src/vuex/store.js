@@ -8,38 +8,19 @@ Vue.use(Vuex);
 let port = 8000
 const routes = {
   uri: `${window.location.protocol }//${window.location.hostname}:${port}`,
-  list: '/latest',
-  before: '/before'
+  list: '/',
+  before: '/before',
+  story: '/story/',
+  storyInfo: '/story-extra/'
 };
 
 
-console.log(routes)
+import {getDate,padding} from '../utils'
 
+const date =new Date();
 
-function getDate(string, vm) {
-  let currDate = new Date();
-  let year, month, date;
-  if (!string) {
-    year = currDate.getFullYear()
-    month = currDate.getMonth()
-    date = currDate.getDate()
-  }
-  year = Number(string.substring(0, 4));
-  month = Number(string.substring(4, 6));
-  date = Number(string.substring(6, 8));
-  let appDate = new Date(year, month - 1, date);
-  let currDateTime = new Date(currDate.getFullYear(), currDate.getMonth(), currDate.getDate()).getTime();
-  let appDateTime = appDate.getTime();
+const DEFAULT_DATE = `${date.getFullYear()}${padding(date.getMonth() + 1)}${padding(date.getDate())}`;
 
-
-  let isCurrentDate = currDateTime === appDateTime;
-  let week = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六',];
-  return isCurrentDate ? '今日新闻'
-    : `${appDate.getFullYear()}年
-               ${vm.$padding(appDate.getMonth() + 1)}月
-               ${vm.$padding(appDate.getDate())}日
-               ${week[appDate.getDay()]}`;
-}
 
 
 export default  new Vuex.Store({
@@ -47,7 +28,7 @@ export default  new Vuex.Store({
     hot: [],
     stories: [],
     tops: [],
-    currentDate: null,
+    currentDate: DEFAULT_DATE,
     currentIndex: 0,
     currentId: null,
     date: [],
@@ -57,58 +38,74 @@ export default  new Vuex.Store({
       id: '',
       content: '',
       info: {
-        likes: '',
-        popuplarity: '',
-        comments: ''
+        likes: 0,
+        popularity: 0,
+        comments: 0
       }
     },
     comments: {
       long: [],
       short: [],
-      total: ''
+      total: 0
     },
 
   },
   mutations: {
-    routeing(state, payload){
-
+    routing(state, payload){
 
     },
     fetchStory(state, payload){
+
+
+      let vm = payload.vm, id = payload.id;
+      let url = `${routes.uri}${routes.story}${id}`;
+      vm.$http.get(url).then(res => {
+        console.log(res)
+      })
+
+
+    },
+    fetchStoryInfo(state, payload){
+
+
+      let id = state.story.id;
+      let url = `${routes.uri}${routes.storyInfo}${id}`;
+      vm.$http.get(url).then(res => {
+        console.log(res)
+      })
+
     },
     fetchComment(state, payload){
+
+
     },
     fetchData(state, payload){
+      let vm = payload.vm
+        , url = `${routes.uri}${routes.list}`;
+      vm.$http.get(url).then(res => {
+        let data = res.body || res.data;
+        state.tops = data.top_stories;
+        state.stories.push({
+          date: data.date,
+          list: data.stories,
+        });
+        vm.$store.commit('fetchLastDate', {date: Number(data.date), vm: vm})
+      })
+    },
+    fetchLastDate(state, payload){
       let vm = payload.vm,
-        name = payload.name;
-      if (name === 'index') {
-        vm.$http.get(`${routes.uri}${routes.list}`).then(res => {
-          let data = res.body || res.data;
-          // state.stories = data.stories;
-          state.tops = data.top_stories;
-          state.hot = data.tops_stories;
-          // state.date = data.date;
-          state.isFetched = true;
-          state.ready = true
-          state.stories.push({
-            date: data.date,
-            list: data.stories,
-            // title: getDate(data.date, vm)
-          })
-        })
-      }
-      if (name === 'last-date') {
-        let date = payload.date;
-        vm.$http.get(`${routes.uri}${routes.before}/${date}`).then(res => {
-          let data = res.body;
-          state.stories.push({
-            date: data.date,
-            list: data.stories,
-            title: getDate(data.date, vm)
-          });
-          state.currentDate = data.date;
-        })
-      }
+        date = payload.date,
+        story = state.stories
+      let url = `${routes.uri}${routes.before}/${date}`;
+      vm.$http.get(url).then(res => {
+        let data = res.body;
+        story.push({
+          date: data.date,
+          list: data.stories,
+        });
+        state.currentDate =data.date
+      });
+
     }
   }
 

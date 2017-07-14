@@ -62,7 +62,7 @@ app.use(hotMiddleware)
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
 
-var uri = 'http://localhost:' + port
+var uri = 'http://' + getIp()+':'+port
 
 var _resolve
 var readyPromise = new Promise(resolve => {
@@ -79,7 +79,24 @@ devMiddleware.waitUntilValid(() => {
   _resolve()
 })
 
-var server = app.listen(port)
+
+//获取本机ip
+function getIp(ip) {
+  if (!ip) {
+    const os = require('os');
+    let networkInterfaces = os.networkInterfaces()['en0'];
+    for (let network  of networkInterfaces) {
+      if (network.family === 'IPv4') {
+        return network.address
+      }
+    }
+
+  }
+  return ip
+}
+
+
+var server = app.listen(port,getIp())
 
 module.exports = {
   ready: readyPromise,

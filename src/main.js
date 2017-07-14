@@ -25,7 +25,7 @@ Vue.prototype.$query = {
 };
 Vue.prototype.$padding = (number) => number > 9 ? number : `0${number}`;
 
-new Vue({
+window.vm = new Vue({
   el: '#app',
   router,
   store,

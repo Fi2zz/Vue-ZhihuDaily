@@ -3,6 +3,23 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require('cors')
 
+//获取本机ip
+function getIp(ip) {
+  if (!ip) {
+    const os = require('os');
+    let networkInterfaces = os.networkInterfaces()['en0'];
+    for (let network  of networkInterfaces) {
+      if (network.family === 'IPv4') {
+        return network.address
+      }
+    }
+
+  }
+  return ip
+}
+
+
+console.log(getIp())
 
 const client = require('./http-client');
 const cheerio = require('cheerio')
@@ -16,13 +33,6 @@ app.use(cors({
   methods: ['GET', 'POST']
 }))
 
-//处理跨域
-// app.use(function (req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
-//   res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-//   next();
-// });
 
 app.get('*', (req, res) => {
   //获取当前的路由url
@@ -35,12 +45,6 @@ app.get('*', (req, res) => {
   };
 
 
-  //
-  // if(req.url ==='/'){
-  //
-  //   res.send('hello ecs')
-  // }
-
 
 
   if (route === '/prefetch-image') {
@@ -51,7 +55,7 @@ app.get('*', (req, res) => {
       res.send(JSON.parse(response))
     }).then(err => res.send(`Error:${err}`))
   }
-  if (route === 'latest') {
+  if (route === 'latest' || req.url==='/') {
     level = 4;
     options.path += `${level}/news/latest`;
     options.data = {};
@@ -75,10 +79,10 @@ app.get('*', (req, res) => {
     let params = req.url.split('/');
     let length = params.length;
     console.log({params})
-    let lastParam = params[length - 1]
+    let lastParam = params[length - 1];
     //请求文章
     if (length <= 3) {
-      options.path += `${level}/news/${getStoryId(req)}`
+      options.path += `${level}/news/${getStoryId(req)}`;
       options.data = {};
       client(options).then(response => {
         let data = JSON.parse(response);
@@ -87,7 +91,6 @@ app.get('*', (req, res) => {
     }
     //文章评论
     if (length <= 4 && lastParam === 'comments') {
-
       options.path += `${level}/story/${getStoryId(req)}/long-comments`;
       options.data = '';
       client(options).then(response => {
@@ -114,6 +117,7 @@ app.get('*', (req, res) => {
 
   }
 
+
   let info = {
     route: route,
     query: req.query
@@ -132,13 +136,9 @@ function getStoryId(req) {
   return getId[0];
 }
 
-// let address = '127.0.0.1'//'60.205.167.155'
 
-let address ='localhost'
-
-app.listen(8000,address, function () {
-  // console.log('> Server is Running on http://'+address)
-  console.log(`> Server is running on http://localhost:8000`)
+app.listen(8000, getIp(), function () {
+  console.log(`> Server is running on http://${getIp()}:8000`)
 });
 
 
