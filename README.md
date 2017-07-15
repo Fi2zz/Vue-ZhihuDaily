@@ -7,12 +7,9 @@
     在index.html head中添加<meta name="referrer" content="never">
 ## 已完成
    1.最新消息
-
    2.内容详情页正文部分
-
 ## 项目依赖
-   express  swiper Vue Vuex Vue-router stylus
-   
+    express  swiper Vue Vuex Vue-router stylus
 ## 使用
    1.克隆这个repos     `$ git clone https://github.com/Fi2zz/gh-zhihu-daily.git`
 
