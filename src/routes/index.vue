@@ -21,7 +21,7 @@
                 </div>
                 <ol class="view-list-list">
                     <li class="view-list-item" v-for="(item,index) in view.list"
-                        @click="getArticle(item.id,view.list[index+1].id)">
+                        @click="getArticle(item.id,view.list[index+1])">
                         <h3 class="view-list-item-title">
                             {{item.title}}
                         </h3>
@@ -51,17 +51,9 @@
 
     import mixins  from '../mixins'
     import {padding, getDate} from '../utils'
-
-    const DEFAULT_VIEW_TITLE = '今日热闻';
-
     const date = new Date();
+    const DEFAULT_VIEW_TITLE = '今日热闻';
     const DEFAULT_DATE = `${date.getFullYear()}${padding(date.getMonth() + 1)}${padding(date.getDate())}`;
-
-    const DEFAULT_DAY = date.getDay()
-    const DEFAULT_LAST_SUNDAY = `${date.getFullYear()}${padding(date.getMonth() + 1)}${padding(date.getDate() - DEFAULT_DAY)}`
-
-    console.log(DEFAULT_LAST_SUNDAY)
-
     export default{
         name: 'index',
         mixins: [mixins],
@@ -85,7 +77,7 @@
                 scrollDown: false,
                 sections: [],
                 isLoading: this.$store.state.loading,
-                currentViewDate: DEFAULT_DATE
+                currentViewDate: Number(DEFAULT_DATE)
             }
         },
         computed: {
@@ -99,20 +91,18 @@
 
         },
         mounted(){
+            this.$nextTick(() => {
+                new Swiper('.swiper-container', this.swipeOpts);
+                this.viewList = () => {
+                    const ref = this.$refs['viewList'];
+                    return ref ? ref.querySelectorAll('ol') : false
+                };
+            });
+            this.$addEvent(window, 'scroll', this.getScrollState, false)
 
-            if (this.$route === '/') {
-
-
-                this.$nextTick(() => {
-                    new Swiper('.swiper-container', this.swipeOpts)
-                    this.viewList = () => {
-                        const ref = this.$refs['viewList'];
-                        return ref ? ref.querySelectorAll('ol') : false
-                    };
-                });
-                window.addEventListener('scroll', this.getScrollState, false)
-            }
-
+        },
+        beforeDestroy(){
+            this.$removeEvent(window, 'scroll', this.getScrollState, false)
         },
         beforeRouteEnter(to, from, next){
             next(vm => {
@@ -127,10 +117,10 @@
                 };
 
                 this.$nextTick(() => {
-                    let views = this.viewList()
+                    let views = this.viewList();
                     let scrollDown = scrollTop > this.scrollPosition;
                     let firstView = views[0];
-                    let rect = firstView.getBoundingClientRect()
+                    let rect = firstView.getBoundingClientRect();
                     let top = parseInt(rect.top) - 240;
                     if (scrollDown) {
 
@@ -144,14 +134,8 @@
                         let rect = lastView.getBoundingClientRect();
                         let bottom = parseInt(rect.bottom);
                         if (bottom === window.screen.height && this.isLoading === false) {
-                            let date = Number(this.currentViewDate);
-                            this.currentViewDate = `${--date}`;
+                            --this.currentViewDate ///= `${--date}`;
                             this.commit('fetchLastDate', {date: this.currentViewDate})
-                        }
-
-                        for (let view of views) {
-
-                            console.log(view.parentNode)
                         }
 
 
@@ -162,8 +146,10 @@
                     this.scrollPosition = scrollTop;
                 })
             },
-            getArticle(id, nextId){
-                this.$router.push({path: `/${id}`, query: {nextId}},)
+            getArticle(id, next){
+
+                this.$router.push({path: `/${id}`, query: {nextId: next ? next.id : ''}},)
+//                console.log(id,nextId)
             },
             setCoverStyle(image){
                 return {

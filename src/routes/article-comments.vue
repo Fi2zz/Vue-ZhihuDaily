@@ -49,33 +49,57 @@
                             {{getDateFromeTime(item.time)}}
                         </small>
                     </div>
-
-
                 </div>
             </div>
 
         </div>
         <div class="view-bar">
             <div class="view-bar-wrap">
-                <div class="view-bar-wrap-content">
-                    <span class="icon icon-arrow-left" @click="goBack(id)"></span>
-                </div>
+                <!--<div class="view-bar-wrap-content">-->
+                <span class="icon icon-arrow-left" @click="goBack(id)"></span>
+                <div class="post-a-comment"> 写评论</div>
+                <!--</div>-->
             </div>
         </div>
     </div>
 </template>
+<style scoped="scoped" lang="stylus">
+
+    .view-bar
+        &-wrap
+            span
+                width: 44px
+                height: 44px
+                position: absolute
+                left: 0
+                top: 0
+                bottom: 0
+                line-height 44px
+                text-align: center
+                z-index: 9
+            .post-a-comment
+                display: block
+                position: absolute
+                left: 0
+                right: 0
+                bottom: 0
+                top: 0
+                z-index: 8
+                text-align: center
+                font-size: 16px
+                line-height 44px
+
+
+</style>
+
 <script>
     import mixins  from '../mixins'
-
     export default{
-
         name: 'comments',
         mixins: [mixins],
         data(){
             return {
                 id: this.$route.params.id,
-
-
             }
         },
         computed: {
@@ -85,13 +109,10 @@
         },
         beforeRouteEnter(currentRoute, prevRoute, next){
             next(vm => {
-                let id = currentRoute.params.id;
-                vm.id = id
-                vm.commit('fetchComments', {id})
+                let id = vm.id;
+                vm.id = id;
+                vm.commit('fetchComments', {id});
             })
-        },
-        created(){
-
         },
         methods: {
             goBack(id){
@@ -99,9 +120,6 @@
             },
             getDateFromeTime(time){
                 let date = new Date(time * 1000);
-
-                console.log(date)
-
                 return `
                 ${date.getFullYear()}-${this.padding(date.getMonth() + 1)}-${this.padding(date.getDate())}
                     ${this.padding(date.getHours())}:${this.padding(date.getMinutes())}

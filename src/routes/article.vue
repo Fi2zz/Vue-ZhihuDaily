@@ -66,17 +66,17 @@
             next(vm => {
                 let id = from.params.id;
                 vm.commit('fetchStory', {id: id})
-                vm.fetchInfo(vm)
+//                vm.fetchInfo(vm)
 
             })
         },
         beforeRouteLeave(to, from, next){
             this.fetchInfo(this, true);
-//            this.commit('fetchStory', {id: this.nextId});
-            next()
+            this.story = null;
+            next();
         },
         created(){
-            this.fetchInfo(this, false)
+//            this.fetchInfo(this, false)
         },
         methods: {
             fetchInfo(vm, clear){
@@ -94,11 +94,8 @@
                 this.$router.push({path: `/${next}`})
             },
             viewComment(id){
-                let story = this.story;
-                let info = story.info;
                 this.$router.push({
-                    path: `/${id}/comments`,
-                    query: {total: info.comments}
+                    path: `/${id}/comments`
                 })
             }
         },
