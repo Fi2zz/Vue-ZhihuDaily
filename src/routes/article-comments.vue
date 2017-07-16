@@ -6,9 +6,9 @@
             </div>
         </div>
         <div class="view-content">
-            <div class="view-comment-length">共{{comments.longComments}}条长评</div>
+            <div class="view-comment-length">共{{comments.long.length}}条长评</div>
             <div class="view-comment-list">
-                <div v-for="item in comments.list" class="view-comment-item">
+                <div v-for="item in comments.long" class="view-comment-item">
                     <div class="view-comment-item-bio">
                         <div class="avatar">
                             <img :src="item.avatar" alt="">
@@ -21,10 +21,39 @@
                     </div>
                     <div class="view-comment-item-content">
                         {{item.content}}
+                        <small style="display: block;margin-top: 8px;">
+                            {{getDateFromeTime(item.time)}}
+                        </small>
                     </div>
+
 
                 </div>
             </div>
+
+            <div class="view-comment-length">共{{comments.short.length}}条短评</div>
+            <div class="view-comment-list">
+                <div v-for="item in comments.short" class="view-comment-item">
+                    <div class="view-comment-item-bio">
+                        <div class="avatar">
+                            <img :src="item.avatar" alt="">
+                        </div>
+                        <span class="bio-name">{{item.author}}</span>
+                        <span class="like">
+                        <span class="icon icon-like"></span>
+                            {{item.likes}}
+                        </span>
+                    </div>
+                    <div class="view-comment-item-content">
+                        {{item.content}}
+                        <small style="display: block;margin-top: 8px;">
+                            {{getDateFromeTime(item.time)}}
+                        </small>
+                    </div>
+
+
+                </div>
+            </div>
+
         </div>
         <div class="view-bar">
             <div class="view-bar-wrap">
@@ -36,35 +65,47 @@
     </div>
 </template>
 <script>
+    import mixins  from '../mixins'
+
     export default{
+
         name: 'comments',
+        mixins: [mixins],
         data(){
             return {
                 id: this.$route.params.id,
-                getCommentsUrl(id){
-                    return `${this.$uri}${this.$query.storyInfo(id, this.$query.longComments)}`
-                },
-                comments: {
-                    total: this.$route.query.total || 0,
-                    longComments: this.$route.query.long || 0,
-                    list: []
 
-                },
 
+            }
+        },
+        computed: {
+            comments(){
+                return this.$store.state.comments
             }
         },
         beforeRouteEnter(currentRoute, prevRoute, next){
             next(vm => {
-                console.log(vm.$route);
-                let path = currentRoute.path.substr(1);
-                vm.$http.get(`${vm.$uri}${path}`).then(res => {
-                    vm.comments.list = res.body.comments;
-                })
+                let id = currentRoute.params.id;
+                vm.id = id
+                vm.commit('fetchComments', {id})
             })
+        },
+        created(){
+
         },
         methods: {
             goBack(id){
-                this.$router.push(`/story/${this.id}`)
+                this.$router.push(`/${this.id}`)
+            },
+            getDateFromeTime(time){
+                let date = new Date(time * 1000);
+
+                console.log(date)
+
+                return `
+                ${date.getFullYear()}-${this.padding(date.getMonth() + 1)}-${this.padding(date.getDate())}
+                    ${this.padding(date.getHours())}:${this.padding(date.getMinutes())}
+                `
             }
         }
     }

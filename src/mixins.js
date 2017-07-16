@@ -1,4 +1,4 @@
-import {getDate} from  './utils'
+import {getDate,padding} from  './utils'
 export default {
   data(){
     return{
@@ -39,6 +39,7 @@ export default {
       }
       this.$router.push({path: path, params: params, query: query})
     },
-    getDate: getDate
+    getDate: getDate,
+    padding:padding
   }
 }

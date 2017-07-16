@@ -14,12 +14,12 @@ export default new Router({
             component: Index
         },
         {
-            path: "/story/:id",
+            path: "/:id",
             name: 'article',
             component: ArticleItem
         },
         {
-            path: '/story/:id/comments',
+            path: '/:id/comments',
             name: 'comments',
             component: Comment
         }

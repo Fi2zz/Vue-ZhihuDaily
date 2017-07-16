@@ -11,7 +11,8 @@ const routes = {
     list: '/',
     before: '/before',
     story: '/story/',
-    storyInfo: '/story-extra/'
+    storyInfo: '/story-extra/',
+    comments: '/comment'
 };
 
 
@@ -40,7 +41,8 @@ export default  new Vuex.Store({
                 likes: 0,
                 popularity: 0,
                 comments: 0
-            }
+            },
+            cover: ''
         },
         comments: {
             long: [],
@@ -53,36 +55,69 @@ export default  new Vuex.Store({
     mutations: {
         routing(state, payload){
 
+
         },
         fetchStory(state, payload){
-
-
             let vm = payload.vm, id = payload.id;
+            state.story.id = id;
             let url = `${routes.uri}${routes.story}${id}`;
             vm.$http.get(url).then(res => {
-                console.log(res)
+
+                let data = res.body;
+                state.story.content = data.body;
+                state.story.title = data.title;
+                state.story.imageSource = data.image_source;
+                state.story.cover = data.image
+
+                console.log(data.image, res)
             })
 
 
         },
         fetchStoryInfo(state, payload){
-
-
             let id = state.story.id;
+            let vm = payload.vm;
             let url = `${routes.uri}${routes.storyInfo}${id}`;
             vm.$http.get(url).then(res => {
-                console.log(res)
+                let data = res.body;
+                state.story.info.like = data.likes;
+                state.story.info.popularity = data.popularity;
+                state.story.info.comments = data.comments
             })
 
         },
-        fetchComment(state, payload){
+        fetchComments(state, payload){
 
+
+            let vm = payload.vm,
+                id = payload.id;
+
+
+            let urls = [
+                {
+                    path: `${routes.uri}${routes.comments}/?id=${id}&type=long`,
+                    type: 'long'
+                },
+                {
+                    path: `${routes.uri}${routes.comments}/?id=${id}&type=short`,
+                    type: 'short'
+
+                }
+            ];
+
+            for (let url of urls) {
+                vm.$http.get(url.path).then(res => {
+                    let comments = res.body.comments;
+                    state.comments[url.type] = comments;
+                    state.comments.total += comments.length
+                })
+            }
 
         },
         fetchData(state, payload){
             let vm = payload.vm
                 , url = `${routes.uri}${routes.list}`;
-            state.loading = true
+            state.loading = true;
             vm.$http.get(url).then(res => {
                 let data = res.body || res.data;
                 state.tops = data.top_stories;

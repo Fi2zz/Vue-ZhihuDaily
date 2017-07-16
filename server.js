@@ -3,12 +3,9 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require('cors')
 
-const getIp =require('./getIp')
+const getIp = require('./getIp')
 
 //获取本机ip
-
-
-
 
 
 const client = require('./http-client');
@@ -65,7 +62,6 @@ app.get('*', (req, res) => {
         level = 4;
         let params = req.url.split('/');
         let length = params.length;
-        console.log({params})
         let lastParam = params[length - 1];
         //请求文章
         if (length <= 3) {
@@ -76,16 +72,37 @@ app.get('*', (req, res) => {
                 res.send(data)
             }).then(err => res.send(`Error:${err}`))
         }
-        //文章评论
-        if (length <= 4 && lastParam === 'comments') {
-            options.path += `${level}/story/${getStoryId(req)}/long-comments`;
-            options.data = '';
+    }
+
+    //文章评论
+
+    if (/^(comment)/.test(route)) {
+        let id = req.query.id;
+        let type = req.query.type
+        options.data = '';
+        let short = {}, long = {};
+        for (let key in options) {
+            short[key] = options[key]
+            long[key] = options[key]
+        }
+        let level = 4;
+        if (type === 'long') {
+            options.path += `${level}/story/${id}/long-comments`;
             client(options).then(response => {
                 res.send(JSON.parse(response))
             }).then(err => {
                 res.send(err)
-            })
+            });
+        } else if (type === 'short') {
+            options.path += `${level}/story/${id}/short-comments`;
+            client(options).then(response => {
+                res.send(JSON.parse(response))
+            }).then(err => {
+                res.send(err)
+            });
         }
+
+
     }
     //文章额外信息，如评论点赞等
     if (/^(story-extra)/.test(route)) {

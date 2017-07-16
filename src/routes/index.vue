@@ -1,6 +1,6 @@
 <template>
     <div class="view list-view">
-        <div class="view-title">
+        <div class="view-title" v-show="viewTitleActivated">
             <div class="view-title-wrap" :class="{'view-title-wrap-active':viewTitleActivated}">
                 {{viewTitle}}
             </div>
@@ -15,12 +15,13 @@
             </div>
         </div>
         <div class="view-list" ref="viewList">
-            <div class="view-list-container" v-for="(view,index) in viewStories">
+            <div class="view-list-container" :id="view.date" v-for="(view,index) in viewStories">
                 <div class="view-list-title" v-if="index !==0">
                     <div class="view-list-title-wrap">{{getDate(view.date)}}</div>
                 </div>
-                <ol class="view-list-list" :id="view.date">
-                    <li class="view-list-item" v-for="item in view.list" @click="getArticle(item.id,index)">
+                <ol class="view-list-list">
+                    <li class="view-list-item" v-for="(item,index) in view.list"
+                        @click="getArticle(item.id,view.list[index+1].id)">
                         <h3 class="view-list-item-title">
                             {{item.title}}
                         </h3>
@@ -98,14 +99,20 @@
 
         },
         mounted(){
-            this.$nextTick(() => {
-                new Swiper('.swiper-container', this.swipeOpts)
-                this.viewList = () => {
-                    const ref = this.$refs['viewList'];
-                    return ref ? ref.querySelectorAll('ol') : false
-                };
-            });
-            window.addEventListener('scroll', this.getScrollState, false)
+
+            if (this.$route === '/') {
+
+
+                this.$nextTick(() => {
+                    new Swiper('.swiper-container', this.swipeOpts)
+                    this.viewList = () => {
+                        const ref = this.$refs['viewList'];
+                        return ref ? ref.querySelectorAll('ol') : false
+                    };
+                });
+                window.addEventListener('scroll', this.getScrollState, false)
+            }
+
         },
         beforeRouteEnter(to, from, next){
             next(vm => {
@@ -115,58 +122,48 @@
         methods: {
             getScrollState(){
                 let scrollTop = window.scrollY;
-                this.viewTitleActivated = scrollTop >= 44;
+                const viewPort = {
+                    height: window.screen.height
+                };
 
                 this.$nextTick(() => {
-
-
-                    let viewList = this.viewList(),
-                        length = viewList.length;
-                    let lastViewList;
+                    let views = this.viewList()
                     let scrollDown = scrollTop > this.scrollPosition;
-
-                    let lastDate;
-
+                    let firstView = views[0];
+                    let rect = firstView.getBoundingClientRect()
+                    let top = parseInt(rect.top) - 240;
                     if (scrollDown) {
 
-                        lastDate = this.currentViewDate
-                        lastViewList = viewList[length - 1];
-                        let rect = lastViewList.getBoundingClientRect();
+                        this.viewTitleActivated = scrollTop >= 44;
+                        if (top < viewPort.height * -1 && scrollTop > 0) {
+                            this.viewTitleActivated = false
+                        }
 
+                        let lastView = views[views.length - 1];
+
+                        let rect = lastView.getBoundingClientRect();
                         let bottom = parseInt(rect.bottom);
-                        let top = parseInt(rect.top);
-
                         if (bottom === window.screen.height && this.isLoading === false) {
                             let date = Number(this.currentViewDate);
                             this.currentViewDate = `${--date}`;
                             this.commit('fetchLastDate', {date: this.currentViewDate})
                         }
-                        if (top <= 88) {
-                            this.viewTitle = getDate(this.currentViewDate)// : DEFAULT_VIEW_TITLE;
+
+                        for (let view of views) {
+
+                            console.log(view.parentNode)
                         }
+
+
                     } else {
 
-                        let total = length;
 
-
-                        lastViewList = viewList;
-
-                        for (let view of viewList) {
-                            let rect = view.getBoundingClientRect();
-                            let bottom = parseInt(rect.bottom);
-                            if (bottom * -1 <= window.screen.height) {
-                                console.log(view.id)
-                            }
-                        }
                     }
-
                     this.scrollPosition = scrollTop;
                 })
-
-
             },
-            getArticle(id, index){
-                this.routing(`/story/${id}`, {params: {mmm: '111'}, query: {index}})
+            getArticle(id, nextId){
+                this.$router.push({path: `/${id}`, query: {nextId}},)
             },
             setCoverStyle(image){
                 return {
