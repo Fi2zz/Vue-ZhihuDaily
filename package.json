@@ -6,12 +6,12 @@
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
-    "start": "node build/dev-server.js",
     "build": "node build/build.js",
     "server": "node server.js"
   },
   "dependencies": {
     "lodash": "^4.17.4",
+    "mint-popup": "^2.0.0",
     "swiper": "^3.4.2",
     "vue": "^2.3.3",
     "vue-recyclerview": "^0.4.0",

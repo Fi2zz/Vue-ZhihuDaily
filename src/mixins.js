@@ -1,7 +1,7 @@
-import {getDate,padding} from  './utils'
+import {getDate, padding} from  './utils'
 export default {
   data(){
-    return{
+    return {
       state: this.$store.state,
     }
   },
@@ -28,18 +28,14 @@ export default {
           }
         }
         else if (key === 'query') {
-
           for (let q in option[key]) {
-
             query[q] = option[key][q]
-
           }
-
         }
       }
       this.$router.push({path: path, params: params, query: query})
     },
     getDate: getDate,
-    padding:padding
+    padding: padding
   }
 }
