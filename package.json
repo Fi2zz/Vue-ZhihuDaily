@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "node build/dev-server.js",
     "build": "node build/build.js",
-    "server": "node server.js"
+    "server": "node server/index.js"
   },
   "dependencies": {
     "lodash": "^4.17.4",

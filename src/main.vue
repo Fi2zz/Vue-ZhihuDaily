@@ -5,8 +5,8 @@
 </template>
 <style src="./stylus/main.styl" lang="stylus"></style>
 <script>
-    export default {
-        name: 'app',
-    }
+export default {
+  name: "app"
+};
 </script>
 
