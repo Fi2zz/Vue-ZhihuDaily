@@ -17,9 +17,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST']
-}))
-
-
+}));
 app.get('*', (req, res) => {
     //获取当前的路由url
     //https://github.com/search?utf8=%E2%9C%93&q=%E7%9F%A5%E4%B9%8E%E6%97%A5%E6%8A%A5+%E7%88%AC%E8%99%AB&type=
@@ -29,8 +27,6 @@ app.get('*', (req, res) => {
         host: host,
         path: `${api}`
     };
-
-
     if (route === '/prefetch-image') {
         level = 7;
         options.path = `${api}${level}/start-image/1080*1766`;
@@ -56,8 +52,6 @@ app.get('*', (req, res) => {
             res.send(JSON.parse(body))
         })
     }
-
-
     if (/^story(\/)(\S)/.test(route)) {
         level = 4;
         let params = req.url.split('/');
@@ -73,9 +67,7 @@ app.get('*', (req, res) => {
             }).then(err => res.send(`Error:${err}`))
         }
     }
-
     //文章评论
-
     if (/^(comment)/.test(route)) {
         let id = req.query.id;
         let type = req.query.type
@@ -116,9 +108,8 @@ app.get('*', (req, res) => {
             res.send(`Error:${err}`)
         })
     }
-
+    //待完成
     if (route === 'more-info') {
-
     }
 
 
@@ -130,10 +121,11 @@ app.get('*', (req, res) => {
         info[key] = options[key]
     }
 
-    console.log(info)
+    // console.log(info)
 
 });
 
+//简单url切割
 function getStoryId(req) {
     let array = req.params[0].trim().split('/');
     let getId = array[2].split('&');

@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <share v-model="popVisible">\
+    <share v-model="popVisible">
     </share>
   </div>
 </template>
@@ -91,7 +91,6 @@
       }
     },
     mounted(){
-      this.popVisible = true
     },
     methods: {
       showPopup(show){

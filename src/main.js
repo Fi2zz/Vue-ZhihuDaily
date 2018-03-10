@@ -25,9 +25,7 @@ Vue.prototype.$query = {
 };
 
 Vue.prototype.$addEvent = function (el, event, handler, userCapture = false) {
-
     el.addEventListener(event, handler, userCapture)
-
 };
 Vue.prototype.$removeEvent = function (el, event, handler, userCapture = false) {
     el.removeEventListener(event, handler, userCapture)
