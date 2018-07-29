@@ -12,7 +12,6 @@
   "dependencies": {
     "swiper": "^3.4.2",
     "vue": "^2.5.16",
-    "vue-resource": "^1.5.1",
     "vue-router": "^2.3.1",
     "vuex": "^2.3.1"
   },
