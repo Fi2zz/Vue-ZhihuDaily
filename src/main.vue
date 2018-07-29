@@ -1,12 +1,12 @@
 <template>
     <div id="app">
-        <router-view></router-view>
+         <router-view></router-view>
     </div>
 </template>
-<style src="./stylus/main.styl" lang="stylus"></style>
+<style lang="stylus" src="./stylus/main.styl"></style>
 <script>
 export default {
-  name: "app"
+  name: "VueZhihuDaily"
 };
 </script>
 

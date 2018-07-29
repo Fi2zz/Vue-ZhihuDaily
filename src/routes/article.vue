@@ -12,67 +12,46 @@
                     <span class="icon icon-like"></span>
                     <span class="text">{{story.likes}}</span>
                 </div>
-                <div class="view-bar-item view-share" @click="showPopup(true)">
+                <div class="view-bar-item view-share">
                     <span class="icon icon-share"></span>
                 </div>
-                <div class="view-bar-item view-comments" @click="viewComment(story.id)">
+                <div class="view-bar-item view-comments" @click="$router.push({path: `/${story.id}/comments`})">
                     <span class="icon icon-comment"></span>
                     <span class="text">{{story.comments.total}}</span>
                 </div>
             </div>
         </div>
-        <share v-model="popVisible"></share>
     </div>
 </template>
 
 <script>
-import mixins from "../mixins";
-import share from "../packages/share/index.vue";
-export default {
-  name: "story",
-  mixins: [mixins],
-  components: {
-    share
-  },
-  data() {
-    return {
-      popVisible: false
+    export default {
+        name: "Story",
+        computed: {
+            story(){
+                return this.$store.state.story
+            }
+        },
+        beforeRouteEnter(from, to, next) {
+            next(vm => {
+                vm.$store.dispatch("getStory", from.params)
+                vm.fetchInfo()
+            });
+        },
+        beforeRouteLeave(to, from, next) {
+            this.fetchInfo(true);
+            next();
+        },
+        methods: {
+            fetchInfo(clear) {
+                this.timer = setInterval(() => {
+                    this.$store.dispatch("getStoryInfo", {id: this.id});
+                }, 1000 * 60);
+                if (clear) {
+                    clearTimeout(this.timer);
+                }
+
+            },
+        }
     };
-  },
-  computed: {
-    story: {
-      get() {
-        return this.$store.state.story;
-      },
-      set() {}
-    }
-  },
-  beforeRouteEnter(from, to, next) {
-    next(vm => vm.commit("fetchStory", from.params));
-  },
-  beforeRouteLeave(to, from, next) {
-    this.fetchInfo(true);
-    next();
-  },
-  methods: {
-    showPopup(show) {
-      this.popVisible = show;
-    },
-    fetchInfo(clear) {
-      this.commit("fetchStoryInfo", { id: this.id });
-      if (!clear) {
-        this.timer = setTimeout(() => {
-          this.fetchInfo(this, false);
-        }, 1000 * 60);
-      } else {
-        clearTimeout(this.timer);
-      }
-    },
-    viewComment(id) {
-      this.$router.push({
-        path: `/${id}/comments`
-      });
-    }
-  }
-};
 </script>

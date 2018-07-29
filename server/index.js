@@ -3,11 +3,9 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-const getIp = require("./getIp");
 
 //获取本机ip
-
-const client = require("./http-client");
+const client = require("./request");
 const host = "news-at.zhihu.com";
 const api = `/api/`;
 let level = 4;
@@ -142,6 +140,6 @@ function getStoryId(req) {
   return getId[0];
 }
 
-app.listen(8000, getIp(), function() {
-  console.log(`> Server is running on http://${getIp()}:8000`);
+app.listen(8000, "localhost", function() {
+  console.log(`> Server is running on http://localhost:8000`);
 });

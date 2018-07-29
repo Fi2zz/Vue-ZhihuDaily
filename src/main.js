@@ -2,20 +2,26 @@ require("./flexible");
 
 import Vue from "vue";
 import App from "./main.vue";
-import VueResource from "vue-resource";
 import store from "./vuex/store";
-import router from "./routes/index";
-Vue.use(VueResource);
+import router from "./routes";
+Vue.prototype.$addEvent = function (el, event, handler, userCapture = false) {
+    setTimeout(() => {
+        el.addEventListener(event, handler, userCapture);
 
-Vue.prototype.$addEvent = function(el, event, handler, userCapture = false) {
-  el.addEventListener(event, handler, userCapture);
+    }, 0)
 };
-Vue.prototype.$removeEvent = function(el, event, handler, userCapture = false) {
-  el.removeEventListener(event, handler, userCapture);
+Vue.prototype.$removeEvent = function (el, event, handler, userCapture = false) {
+    setTimeout(() => {
+        el.removeEventListener(event, handler, userCapture);
+    }, 0)
 };
-window.vm = new Vue({
-  el: "#app",
-  router,
-  store,
-  render: h => h(App)
+
+Vue.prototype.padding = function (number) {
+    return parseInt(number) > 9 ? `${number}` : `0${number}`;
+}
+const VueZhihuDaily = new Vue({
+    el: "#app",
+    router,
+    store,
+    render: h => h(App)
 });
