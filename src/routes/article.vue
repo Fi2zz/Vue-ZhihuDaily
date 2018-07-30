@@ -25,33 +25,32 @@
 </template>
 
 <script>
-    export default {
-        name: "Story",
-        computed: {
-            story(){
-                return this.$store.state.story
-            }
-        },
-        beforeRouteEnter(from, to, next) {
-            next(vm => {
-                vm.$store.dispatch("getStory", from.params)
-                vm.fetchInfo()
-            });
-        },
-        beforeRouteLeave(to, from, next) {
-            this.fetchInfo(true);
-            next();
-        },
-        methods: {
-            fetchInfo(clear) {
-                this.timer = setInterval(() => {
-                    this.$store.dispatch("getStoryInfo", {id: this.id});
-                }, 1000 * 60);
-                if (clear) {
-                    clearTimeout(this.timer);
-                }
-
-            },
-        }
-    };
+export default {
+  name: "Story",
+  computed: {
+    story() {
+      return this.$store.state.story;
+    }
+  },
+  beforeRouteEnter(from, to, next) {
+    next(vm => {
+      vm.$store.dispatch("getStory", from.params);
+      vm.fetchInfo();
+    });
+  },
+  beforeRouteLeave(to, from, next) {
+    this.fetchInfo(true);
+    next();
+  },
+  methods: {
+    fetchInfo(clear) {
+      this.timer = setInterval(() => {
+        this.$store.dispatch("getStoryInfo", { id: this.id });
+      }, 1000 * 60);
+      if (clear) {
+        clearInterval(this.timer);
+      }
+    }
+  }
+};
 </script>
