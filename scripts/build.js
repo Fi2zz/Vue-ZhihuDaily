@@ -1,16 +1,18 @@
 "use strict";
-process.env.NODE_ENV = "production";
+const config = require("./config");
+process.env.NODE_ENV =config.env.production;
+
 const path = require("path");
 const chalk = require("chalk");
 const webpack = require("webpack");
-const config = require("./config");
+
 const webpackConfig = require("./webpack.config");
 const fs = require("fs-extra");
 function build() {
     console.log("building for production...");
     removeDistFolder();
     copyStaticFolder();
-    return compiler(webpackConfig());
+    return compiler(webpackConfig(config.env.production));
 }
 function removeDistFolder() {
     fs.emptyDirSync(config.dist);
