@@ -5,15 +5,18 @@
 const path = require("path");
 
 module.exports = {
+    dist: path.resolve(__dirname, "../dist"),
+    publicUrl: "/",
+    assets:"./static",
     development: {
         ENV: {
-            NODE_ENV: '"development"',
+            NODE_ENV: '"development"'
         },
         // Paths
         assetsSubDirectory: "static",
+        assets:"./static",
         assetsPublicPath: "/",
         proxyTable: {},
-
         // Various Dev Server settings
         host: "localhost", // can be overwritten by process.env.HOST
         port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
@@ -32,22 +35,25 @@ module.exports = {
         // set this to false - it *may* help
         // https://vue-loader.vuejs.org/en/options.html#cachebusting
         cacheBusting: true,
-
         cssSourceMap: true
     },
 
     production: {
+
+
         ENV: {
-            NODE_ENV: '"production"',
+            NODE_ENV: '"production"'
         },
         // Template for index.html
         index: path.resolve(__dirname, "../dist/index.html"),
+        dist: path.resolve(__dirname, "../dist"),
+        publicUrl: "/",
+        assets:"./static",
 
         // Paths
         assetsRoot: path.resolve(__dirname, "../dist"),
         assetsSubDirectory: "static",
         assetsPublicPath: "/",
-
         /**
          * Source Maps
          */

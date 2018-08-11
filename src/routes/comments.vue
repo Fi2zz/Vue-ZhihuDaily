@@ -10,16 +10,14 @@
                 <span :class="`double-arrows-${arrowDirection?'up':'down'}`"></span>
             </div>
             <div class="view-comment-list" v-show="arrowDirection">
-                <div v-for="(item,index) in comments.long.list"
-                     key="index"
-                     class="view-comment-item">
+                <div v-for="(item,index) in comments.long.list" key="index" class="view-comment-item">
                     <div class="view-comment-item-bio">
                         <div class="avatar">
                             <img :src="item.avatar" alt="">
                         </div>
                         <span class="bio-name">{{item.author}}</span>
                         <span class="like">
-                        <span class="icon icon-like"></span>
+                            <span class="icon icon-like"></span>
                             {{item.likes}}
                         </span>
                     </div>
@@ -42,7 +40,7 @@
                         </div>
                         <span class="bio-name">{{item.author}}</span>
                         <span class="like">
-                        <span class="icon icon-like"></span>
+                            <span class="icon icon-like"></span>
                             {{item.likes}}
                         </span>
                     </div>
@@ -83,22 +81,22 @@
             next(vm => {
                 let id = vm.id;
                 vm.id = id;
-                vm.$store.dispatch("getStoryComments", {id})
+                vm.$store.dispatch("getStoryComments", { id })
             });
         },
         created() {
-            this.$store.dispatch("getStoryInfo", {id: this.id})
+            this.$store.dispatch("getStoryInfo", { id: this.id })
         },
         methods: {
             getDateFromeTime(time) {
                 let date = new Date(time * 1000);
                 return `
                 ${date.getFullYear()}-${this.padding(
-                    date.getMonth() + 1
-                )}-${this.padding(date.getDate())}
+                        date.getMonth() + 1
+                    )}-${this.padding(date.getDate())}
                     ${this.padding(date.getHours())}:${this.padding(
-                    date.getMinutes()
-                )}
+                        date.getMinutes()
+                    )}
                 `;
             }
         }

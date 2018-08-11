@@ -5,8 +5,9 @@ const headers = {
   "User-Agent":
     "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36"
 };
+const host = "news-at.zhihu.com";
 //http请求客户端
-module.exports = function client(opts) {
+module.exports = function (opts) {
   let method = opts.method ? opts.method.toLowerCase() : "get";
   let https = opts.https || false;
   let data = opts.data ? querystring.stringify(opts.data) : "";
@@ -20,7 +21,7 @@ module.exports = function client(opts) {
   }
   let options = {
     port: method === "post" ? "8097" : 80,
-    host: opts.host,
+    host: host,
     path: opts.path + data,
     method: method.toUpperCase(),
     headers: headers

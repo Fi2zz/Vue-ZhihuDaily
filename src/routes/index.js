@@ -5,21 +5,21 @@ import Story from "./article.vue";
 import Comment from "./comments.vue";
 Vue.use(Router);
 export default new Router({
-    routes: [
-        {
-            path: "/",
-            name: "index",
-            component: Stories
-        },
-        {
-            path: "/:id&next=:next",
-            name: "article",
-            component: Story
-        },
-        {
-            path: "/:id/comments",
-            name: "comments",
-            component: Comment
-        }
-    ]
+  routes: [
+    {
+      path: "/",
+      name: "index",
+      component: Stories
+    },
+    {
+      path: "/:id",
+      name: "article",
+      component: Story
+    },
+    {
+      path: "/:id/comments",
+      name: "comments",
+      component: Comment
+    }
+  ]
 });
