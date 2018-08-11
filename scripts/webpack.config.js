@@ -21,7 +21,10 @@ module.exports = function webpackConfig(mode) {
             mode === "development" ? "style-loader" : MiniCssExtractPlugin.loader,
             "css-loader"
         ];
-        loaders.push(`${loaderType}-loader`);
+        if (loaderType) {
+            loaders.push(`${loaderType}-loader`);
+        }
+
         return loaders;
     };
     const webpackConfig = {
@@ -171,6 +174,7 @@ module.exports = function webpackConfig(mode) {
             new webpack.optimize.ModuleConcatenationPlugin()
         )
     }
+    return webpackConfig
 };
 
 

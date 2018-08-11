@@ -9,7 +9,7 @@ const webpack = require("webpack");
 const webpackConfig = require("./webpack.config");
 const fs = require("fs-extra");
 function build() {
-    console.log("building for production...");
+    console.log("> Building for production...");
     removeDistFolder();
     copyStaticFolder();
     return compiler(webpackConfig(config.env.production));
