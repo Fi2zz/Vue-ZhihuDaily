@@ -13,7 +13,7 @@ function build() {
     console.log("> Building for production...");
     removeDistFolder();
     copyStaticFolder();
-    return compiler(webpackConfig(config.env.production));
+    return compiler(webpackConfig("production"));
 }
 function removeDistFolder() {
     fs.emptyDirSync(config.dist);

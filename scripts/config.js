@@ -5,10 +5,6 @@ module.exports = {
   publicUrl: "/",
   assets: "./static",
   index: path.resolve(__dirname, "../dist/index.html"),
-  env: {
-    production: "production",
-    development: "development"
-  },
   devServer: {
     proxyTable: {},
     host: "localhost", // can be overwritten by process.env.HOST

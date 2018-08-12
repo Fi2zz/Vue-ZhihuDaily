@@ -29,7 +29,7 @@ function runDevServer() {
   console.log("");
   console.log(chalk.green("> Starting the development server..."));
   const devServer = new WebpackDevServer(
-    createCompiler(webpackConfig(config.env.development)),
+    createCompiler(webpackConfig("development")),
     webpackDevServerConfig
   );
 
