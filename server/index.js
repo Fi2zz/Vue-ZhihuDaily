@@ -1,16 +1,20 @@
 const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const request = require("./request");
+const get = require("./get");
+
 function runServer(onServerStarted) {
   const app = express();
-  app.use(bodyParser.urlencoded({ extended: false }));
-  app.use(
-    cors({
-      origin: "*",
-      methods: ["GET", "POST"]
-    })
-  );
+  //處理開發期間跨域
+  app.all("*", function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept"
+    );
+    res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+    res.header("X-Powered-By", " 3.2.1");
+    res.header("Content-Type", "application/json;charset=utf-8");
+    next();
+  });
   app.get("*", (req, res) => {
     function reponse(response) {
       let parse;
@@ -21,12 +25,13 @@ function runServer(onServerStarted) {
       }
       res.send(parse);
     }
+
     function reject(err) {
+      console.log("error", err);
       res.send(`Error:${err}`);
     }
-    request({
-      path: req.url
-    })
+
+    get(req.url)
       .then(reponse)
       .catch(reject);
   });
@@ -35,7 +40,7 @@ function runServer(onServerStarted) {
       throw err;
     }
     console.log(`> Server is running on http://localhost:8000`);
-    if (!err) {
+    if (!err && onServerStarted) {
       onServerStarted();
     }
   });
