@@ -4,15 +4,8 @@ const webpack = require("webpack");
 const WebpackDevServer = require("webpack-dev-server");
 const runApiServer = require("../server");
 const webpackConfig = require("./webpack.config");
-const isInteractive = process.stdout.isTTY;
-const webpackDevServerConfig = require("./webpack.dev.server.conf");
+const webpackDevServerConfig = require("./webpackDevServerConfig");
 const chalk = require("chalk");
-function clearConsole() {
-  process.stdout.write(
-    process.platform === "win32" ? "\x1B[2J\x1B[0f" : "\x1B[2J\x1B[3J\x1B[H"
-  );
-}
-
 function createCompiler(config) {
   let compiler;
   try {
