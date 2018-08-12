@@ -1,14 +1,12 @@
 "use strict";
-const config = require("./config");
-process.env.NODE_ENV = config.env.production;
-const messageFormatter = require("./webpackMessageFormatter");
-
-
+process.env.NODE_ENV ="production";
 const path = require("path");
 const chalk = require("chalk");
 const webpack = require("webpack");
-const webpackConfig = require("./webpack.config");
 const fs = require("fs-extra");
+const config = require("./config");
+const webpackConfig = require("./webpack.config");
+const messageFormatter = require("./webpackMessageFormatter");
 function build() {
     console.log("> Building for production...");
     removeDistFolder();

@@ -1,7 +1,7 @@
-const config = require("./config");
-process.env.NODE_ENV = config.env.development;
+process.env.NODE_ENV = "development";
 const webpack = require("webpack");
 const WebpackDevServer = require("webpack-dev-server");
+const config = require("./config");
 const runApiServer = require("../server");
 const webpackConfig = require("./webpack.config");
 const webpackDevServerConfig = require("./webpackDevServerConfig");
