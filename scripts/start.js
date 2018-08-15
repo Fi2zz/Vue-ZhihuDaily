@@ -1,11 +1,14 @@
 process.env.NODE_ENV = "development";
 const webpack = require("webpack");
 const WebpackDevServer = require("webpack-dev-server");
-const config = require("./config");
 const runApiServer = require("../server");
 const webpackConfig = require("./webpack.config");
 const webpackDevServerConfig = require("./webpackDevServerConfig");
 const chalk = require("chalk");
+
+const argv = process.argv.slice();
+const lastArgv = argv.pop();
+
 function createCompiler(config) {
   let compiler;
   try {
@@ -49,10 +52,12 @@ function runDevServer() {
     });
   });
 }
-function runAll() {
+
+if (lastArgv === "with-api") {
   console.log(" ");
   console.log("Starting api server...");
   console.log(" ");
   runApiServer(runDevServer);
+} else if (lastArgv === "without-api") {
+  runDevServer();
 }
-runAll();
