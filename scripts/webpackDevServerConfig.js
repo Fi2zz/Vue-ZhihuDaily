@@ -1,5 +1,6 @@
 const reporter = require("./webpackDevServerReporter");
 const config = require("./config");
+const serverApi = require("./serverApi");
 module.exports = {
   clientLogLevel: "warning",
   hot: true,
@@ -14,5 +15,27 @@ module.exports = {
   watchOptions: {
     poll: false
   },
-  reporter
+  reporter,
+  before(app) {
+    
+    app.get(/^\/api/, (req, res) => {
+      console.log(req.url);
+      function reponse(response) {
+        let parse;
+        try {
+          parse = JSON.parse(response);
+        } catch (e) {
+          parse = response;
+        }
+        res.send(parse);
+      }
+      function reject(err) {
+        console.log("error", err);
+        res.send(`Error:${err}`);
+      }
+      serverApi(req.url)
+        .then(reponse)
+        .catch(reject);
+    });
+  }
 };

@@ -1,7 +1,7 @@
 process.env.NODE_ENV = "development";
 const webpack = require("webpack");
 const WebpackDevServer = require("webpack-dev-server");
-const runApiServer = require("../server");
+
 const webpackConfig = require("./webpack.config");
 const webpackDevServerConfig = require("./webpackDevServerConfig");
 const chalk = require("chalk");
@@ -27,37 +27,26 @@ function createCompiler(config) {
   return compiler;
 }
 
-function runDevServer() {
-  let port = webpackDevServerConfig.port;
-  console.log("");
-  console.log(chalk.green("> Starting the development server..."));
-  const devServer = new WebpackDevServer(
-    createCompiler(webpackConfig("development")),
-    webpackDevServerConfig
+let port = webpackDevServerConfig.port;
+console.log("");
+console.log(chalk.green("> Starting the development server..."));
+const devServer = new WebpackDevServer(
+  createCompiler(webpackConfig("development")),
+  webpackDevServerConfig
+);
+
+devServer.listen(port, "localhost", err => {
+  if (err) {
+    throw err;
+  }
+  console.log(
+    chalk.yellow("> Your app is running on http://localohost" + port)
   );
-
-  devServer.listen(port, "localhost", err => {
-    if (err) {
-      throw err;
-    }
-    console.log(
-      chalk.yellow("> Your app is running on http://localohost" + port)
-    );
-    console.log(chalk.yellow("> Compilation is not done yet,please wait"));
+  console.log(chalk.yellow("> Compilation is not done yet,please wait"));
+});
+["SIGINT", "SIGTERM"].forEach(function(sig) {
+  process.on(sig, function() {
+    devServer.close();
+    process.exit();
   });
-  ["SIGINT", "SIGTERM"].forEach(function(sig) {
-    process.on(sig, function() {
-      devServer.close();
-      process.exit();
-    });
-  });
-}
-
-if (lastArgv === "with-api") {
-  console.log(" ");
-  console.log("Starting api server...");
-  console.log(" ");
-  runApiServer(runDevServer);
-} else if (lastArgv === "without-api") {
-  runDevServer();
-}
+});

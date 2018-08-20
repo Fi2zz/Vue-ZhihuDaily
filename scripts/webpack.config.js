@@ -27,7 +27,7 @@ module.exports = function webpackConfig(mode) {
     mode: mode,
     context: path.resolve(__dirname, "../"),
     entry: {
-      app: "./src/main.js"
+      app: "./src/App.js"
     },
     output: {
       path: config.dist,

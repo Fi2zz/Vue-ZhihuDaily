@@ -7,6 +7,10 @@ Vue.prototype.$addEvent = function (el, event, handler, userCapture = false) {
         el.addEventListener(event, handler, userCapture);
     }, 0);
 };
+
+
+
+
 Vue.prototype.$removeEvent = function (el, event, handler, userCapture = false) {
     setTimeout(() => {
         el.removeEventListener(event, handler, userCapture);

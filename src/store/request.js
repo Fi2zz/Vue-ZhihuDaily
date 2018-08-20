@@ -1,7 +1,5 @@
-const port = 8000;
 const apiFatory = (name, query) => {
-  let url = `${window.location.protocol}//${window.location.hostname}:${port}`;
-
+  let url = `${window.location.protocol}//${window.location.host}`;
   let apiURLPrefix = "/api/4/";
   const map = {
     list: apiURLPrefix + "news/latest",

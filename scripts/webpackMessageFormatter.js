@@ -1,6 +1,10 @@
 const chalk = require("chalk");
 
 module.exports = function webpackMessageFormatter(stat, next) {
+  if (!stat) {
+    return true;
+  }
+
   let message = stat.toJson({}, true);
   let msg = "> Compiled Successfuly";
   if (message.errors.length) {
