@@ -3,7 +3,7 @@
     <div class="app-article-main" ref="content" v-html="story.content"></div>
     <div class="view-bar">
       <div class="view-bar-wrap">
-        <div class="view-bar-item view-prev" @click="$router.push({path:'/'})">
+        <div class="view-bar-item view-prev" @click="back">
           <span class="icon icon-arrow-left"></span>
         </div>
         <div class="view-bar-item view-next"></div>
@@ -14,9 +14,9 @@
         <div class="view-bar-item view-share">
           <span class="icon icon-share"></span>
         </div>
-        <div class="view-bar-item view-comments" @click="$router.push({path: `/${story.id}/comments`})">
+        <div class="view-bar-item view-comments" @click="readComments">
           <span class="icon icon-comment"></span>
-          <span class="text">{{story.comments.total}}</span>
+          <span class="text">{{story.totalCommentSize}}</span>
         </div>
       </div>
     </div>
@@ -24,32 +24,50 @@
 </template>
 
 <script>
-  export default {
-    name: "Story",
-    computed: {
-      story() {
-        return this.$store.state.story;
-      }
-    },
-    beforeRouteEnter(from, to, next) {
-      next(vm => {
-        vm.$store.dispatch("getStory", from.params);
-        vm.fetchInfo();
-      });
-    },
-    beforeRouteLeave(to, from, next) {
-      this.fetchInfo(true);
-      next();
-    },
-    methods: {
-      fetchInfo(clear) {
-        this.timer = setInterval(() => {
-          this.$store.dispatch("getStoryInfo", { id: this.id });
-        }, 1000 * 60);
-        if (clear) {
-          clearInterval(this.timer);
+import { mapState, mapActions } from "vuex";
+export default {
+  name: "Story",
+  data() {
+    return {
+      cleanTimer: false
+    };
+  },
+  computed: {
+    ...mapState({
+      story: state => state.story,
+      id: state => state.story.id
+    })
+  },
+  beforeRouteEnter(from, to, next) {
+    next(vm => {
+      vm.getStory(from.params);
+      vm.fetchInfo();
+    });
+  },
+  mounted() {
+    this.fetchInfo();
+  },
+  beforeRouteLeave(to, from, next) {
+    this.cleanTimer = true;
+    next();
+  },
+  methods: {
+    ...mapActions(["getStory"]),
+    fetchInfo(id) {
+      let timer = setInterval(() => {
+        if (this.cleanTimer) {
+          clearInterval(timer);
+          return false;
         }
-      }
+        this.$store.dispatch("getStoryInfo", { id: this.story.id });
+      }, 5000);
+    },
+    back() {
+      this.$router.back({ path: "/" });
+    },
+    readComments() {
+      this.$router.push({ path: `/${this.story.id}/comments` });
     }
-  };
+  }
+};
 </script>

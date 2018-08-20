@@ -2,15 +2,15 @@
     <div class="view view-comment">
         <div class="view-header">
             <div class="view-header-wrap">
-                {{comments.total}}条点评
+                {{totalCommentsSize}}条点评
             </div>
         </div>
         <div class="view-content">
-            <div class="view-comment-length" @click="arrowDirection=!arrowDirection">共{{comments.long.size}}条长评
+            <div class="view-comment-length" @click="changeArrowDirection">共{{longCommentsSize}}条长评
                 <span :class="`double-arrows-${arrowDirection?'up':'down'}`"></span>
             </div>
             <div class="view-comment-list" v-show="arrowDirection">
-                <div v-for="(item,index) in comments.long.list" key="index" class="view-comment-item">
+                <div v-for="(item,index) in comments.long" :key="index" class="view-comment-item">
                     <div class="view-comment-item-bio">
                         <div class="avatar">
                             <img :src="item.avatar" alt="">
@@ -24,19 +24,23 @@
                     <div class="view-comment-item-content">
                         {{item.content}}
                         <small style="display: block;margin-top: 8px;">
-                            {{getDateFromeTime(item.time)}}
+                            {{item.time}}
                         </small>
                     </div>
                 </div>
             </div>
-            <div class="view-comment-length" @click="arrowDirection=!arrowDirection">共{{comments.short.size}}条短评
+            <div class="view-comment-length" @click="changeArrowDirection">共{{shortCommentsSize}}条短评
                 <span :class="`double-arrows-${!arrowDirection?'up':'down'}`"></span>
             </div>
-            <div class="view-comment-list" v-show="!arrowDirection">
-                <div v-for="item in comments.short.list" class="view-comment-item">
+            <div class="view-comment-list" 
+                v-show="!arrowDirection">
+                <div v-for="(item,index) in comments.short"
+                    :key="index" 
+                    class="view-comment-item"
+                 >
                     <div class="view-comment-item-bio">
                         <div class="avatar">
-                            <img :src="item.avatar" alt="">
+                            <img :src="item.avatar"/>
                         </div>
                         <span class="bio-name">{{item.author}}</span>
                         <span class="like">
@@ -47,7 +51,7 @@
                     <div class="view-comment-item-content">
                         {{item.content}}
                         <small style="display: block;margin-top: 8px;">
-                            {{getDateFromeTime(item.time)}}
+                            {{(item.time)}}
                         </small>
                     </div>
                 </div>
@@ -55,50 +59,45 @@
         </div>
         <div class="view-bar">
             <div class="view-bar-wrap">
-                <div class="post-a-comment"> 写评论</div>
+                <div class="post-a-comment">写评论</div>
             </div>
         </div>
     </div>
 </template>
 <style scoped="scoped" lang="stylus" src="../stylus/comment.styl"></style>
 <script>
-    export default {
-        name: "Comments",
-        data() {
-            return {
-                id: this.$route.params.id
-            };
-        },
-        computed: {
-            comments() {
-                return this.$store.state.story.comments;
-            },
-            arrowDirection() {
-                return this.$store.state.story.comments.long.size > 0;
-            }
-        },
-        beforeRouteEnter(to, from, next) {
-            next(vm => {
-                let id = vm.id;
-                vm.id = id;
-                vm.$store.dispatch("getStoryComments", { id })
-            });
-        },
-        created() {
-            this.$store.dispatch("getStoryInfo", { id: this.id })
-        },
-        methods: {
-            getDateFromeTime(time) {
-                let date = new Date(time * 1000);
-                return `
-                ${date.getFullYear()}-${this.padding(
-                        date.getMonth() + 1
-                    )}-${this.padding(date.getDate())}
-                    ${this.padding(date.getHours())}:${this.padding(
-                        date.getMinutes()
-                    )}
-                `;
-            }
-        }
+import { mapState } from "vuex";
+export default {
+  name: "Comments",
+  data() {
+    return {
+      id: this.$route.params.id,
+      arrowDirection: false
     };
+  },
+  computed: {
+    ...mapState({
+      comments: state => ({
+        long: state.story.longComments,
+        short: state.story.shortComments
+      }),
+      longCommentsSize: state => state.story.longCommentSize,
+      shortCommentsSize: state => state.story.shortCommentSize,
+      totalCommentsSize: state => state.story.totalCommentSize
+    })
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      let id = vm.id;
+      vm.id = id;
+      vm.$store.dispatch("getStoryInfo", { id });
+      vm.$store.dispatch("getStoryComments", { id });
+    });
+  },
+  methods: {
+    changeArrowDirection() {
+      this.arrowDirection = !this.arrowDirection;
+    }
+  }
+};
 </script>

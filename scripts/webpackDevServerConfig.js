@@ -16,8 +16,8 @@ module.exports = {
   },
   reporter(context, report) {
     messageFormatter(report.stats, err => {
-      console.log(err);
-      process.exit();
+      console.log(err.join("\n\n"));
+      // process.exit();
     });
   },
   before: require("./api")

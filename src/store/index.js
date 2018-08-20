@@ -13,7 +13,6 @@ let currYear = date.getFullYear();
 let currMonth = padding(date.getMonth() + 1);
 let currDate = padding(date.getDate());
 let string = `${currYear}${currMonth}${currDate}`;
-
 const store = new Vuex.Store({
   state: {
     stories: [],
@@ -27,7 +26,12 @@ const store = new Vuex.Store({
         long: { list: [], size: 0 },
         short: { list: [], size: 0 },
         total: 0
-      }
+      },
+      longCommentSize: 0,
+      shortCommentSize: 0,
+      totalCommentSize: 0,
+      longComments: [],
+      shortComments: []
     },
     loading: false,
     currentDate: parseInt(string),
@@ -39,16 +43,17 @@ const store = new Vuex.Store({
       state.loading = loading;
     },
     [types.UPDATE_STORY_INFO](state, data) {
-      state.story.likes = data.likes;
-      state.story.comments = data.comments;
+      for (let key in data) {
+        state.story[key] = data[key];
+      }
     },
     [types.UPDATE_STORY](state, data) {
       state.story.id = data.id;
       state.story.content = data.content;
     },
     [types.UPDATE_STORY_COMMENT](state, data) {
-      state.story.comments.short.list = data.short;
-      state.story.comments.long.list = data.long;
+      state.story.longComments = data.longComments;
+      state.story.shortComments = data.shortComments;
     },
     [types.UPDATE_TOPS](state, data) {
       state.tops = data;

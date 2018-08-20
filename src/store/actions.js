@@ -1,6 +1,6 @@
 import { get } from "./request";
 import types from "./types";
-
+import router from "../router";
 function padding(number) {
   return parseInt(number) > 9 ? `${number}` : `0${number}`;
 }
@@ -42,6 +42,16 @@ function displayDate(string) {
 
 export default {
   loading: ({ commit, dispatch }, loading) => commit(types.LOADING, loading),
+  goTo(context, payload) {
+    router.push(payload);
+  },
+  removeStory({ commit }) {
+    return commit(types.UPDATE_STORY, {
+      content: "",
+      id: null
+    });
+  },
+
   async getStory({ commit, dispatch }, { id }) {
     let data = await get("story", id);
     let content = data.body;
@@ -66,7 +76,9 @@ export default {
         }
         return line;
       });
-    dispatch("getStoryInfo", { id });
+
+    await dispatch("getStoryInfo", { id });
+
     commit(types.UPDATE_STORY, {
       content: contentList.join(""),
       id: id
@@ -77,21 +89,41 @@ export default {
     let data = await get("storyInfo", id);
     commit(types.UPDATE_STORY_INFO, {
       like: data.popularity,
-      comments: {
-        total: data.comments,
-        long: {
-          size: data.long_comments
-        },
-        short: { size: data.short_comments }
-      }
+      longCommentSize: data.long_comments,
+      shortCommentSize: data.short_comments,
+      totalCommentSize: data.comments
     });
   },
   async getStoryComments({ commit }, { id }) {
     let long = await get("longComment", id);
     let short = await get("shortComment", id);
+
+    function formatCommentTime(list) {
+      if (list.length <= 0) {
+        return list;
+      }
+      const format = date => {
+        const prefix = [
+          date.getFullYear(),
+          padding(date.getMonth() + 1),
+          padding(date.getDate())
+        ];
+
+        const suffix = [
+          padding(date.getHours()),
+          padding(date.getMinutes()),
+          padding(date.getSeconds())
+        ];
+        return `${prefix.join("-")} ${suffix.join(":")}`;
+      };
+      return list.map(item => {
+        return { ...item, time: format(new Date(item.time * 1000)) };
+      });
+    }
+
     commit(types.UPDATE_STORY_COMMENT, {
-      long,
-      short
+      longComments: formatCommentTime(long.comments),
+      shortComments: formatCommentTime(short.comments)
     });
   },
   async getStories({ commit, state, dispatch }) {
