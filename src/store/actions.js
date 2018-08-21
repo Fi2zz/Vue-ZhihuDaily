@@ -133,8 +133,6 @@ export default {
     });
   },
   async getStoryComments({ commit, state }, id) {
-    console.log("getStoryComments", id);
-
     let long = await get("longComment", id);
     let short = await get("shortComment", id);
     commit(types.UPDATE_STORY_COMMENT, [
