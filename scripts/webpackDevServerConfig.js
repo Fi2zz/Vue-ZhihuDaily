@@ -1,7 +1,4 @@
-const config = require("./config");
-const formatWebpackMessages = require("./formatWebpackMessages");
-const chalk = require("chalk");
-const devServerConfig = () => ({
+const devServerConfig = (config, reporter, before) => ({
   clientLogLevel: "warning",
   hot: true,
   contentBase: config.devServer.contentBase,
@@ -15,15 +12,12 @@ const devServerConfig = () => ({
   watchOptions: {
     poll: false
   },
-  reporter(context, report) {
-    if (report.stats) {
-      report = formatWebpackMessages(report.stats.toJson());
-      if (report.errors.length) {
-        console.log(chalk.red(report.errors.join("\n\n")));
-      }
-    }
-  },
-  before: require("./api")
+  reporter,
+  before
 });
 
-module.exports = devServerConfig();
+module.exports = devServerConfig(
+  require("./config"),
+  require("./devServerReporter"),
+  require("./api")
+);

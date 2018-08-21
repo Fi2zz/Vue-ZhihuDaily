@@ -27,7 +27,6 @@ function createCompiler(config) {
   return compiler;
 }
 
-let port = webpackDevServerConfig.port;
 console.log("");
 console.log(chalk.green("> Starting the development server..."));
 const devServer = new WebpackDevServer(
@@ -35,15 +34,24 @@ const devServer = new WebpackDevServer(
   webpackDevServerConfig
 );
 
-devServer.listen(port, "localhost", err => {
-  if (err) {
-    throw err;
+devServer.listen(
+  webpackDevServerConfig.port,
+  webpackDevServerConfig.host,
+  err => {
+    if (err) {
+      throw err;
+    }
+    console.log(
+      chalk.yellow(
+        "> Your app is running on http://" +
+          webpackDevServerConfig.host +
+          ":" +
+          webpackDevServerConfig.port
+      )
+    );
+    // console.log(chalk.yellow("> Compilation is not done yet,please wait"));
   }
-  console.log(
-    chalk.yellow("> Your app is running on http://localohost" + port)
-  );
-  console.log(chalk.yellow("> Compilation is not done yet,please wait"));
-});
+);
 ["SIGINT", "SIGTERM"].forEach(function(sig) {
   process.on(sig, function() {
     devServer.close();
