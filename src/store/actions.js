@@ -1,6 +1,5 @@
 import { get } from "./request";
 import types from "./types";
-import router from "../router";
 
 function padding(number) {
   return parseInt(number) > 9 ? `${number}` : `0${number}`;
@@ -83,14 +82,10 @@ function now() {
 
 export default {
   loading: ({ commit, dispatch }, loading) => commit(types.LOADING, loading),
-  goTo(context, payload) {
-    router.push(payload);
-  },
-  removeStory({ commit }) {
-    commit(types.UPDATE_STORY, {
-      content: "",
-      id: null
-    });
+
+  resetStoryView({ commit }) {
+    commit(types.UPDATE_STORY_ID, null);
+    commit(types.UPDATE_STORY_COMMENT, "");
     commit(types.UPDATE_STORY_INFO, {
       like: 0,
       long: 0,
@@ -127,7 +122,8 @@ export default {
     commit(types.UPDATE_STORY_CONTENT, content.join(""));
   },
 
-  async getStoryInfo({ commit }, { id }) {
+  async getStoryInfo({ commit, state }, { id }) {
+    id = id || state.story.id;
     let data = await get("storyInfo", id);
     commit(types.UPDATE_STORY_INFO, {
       like: data.popularity,
@@ -136,7 +132,11 @@ export default {
       total: data.comments
     });
   },
-  async getStoryComments({ commit, state }, { id }) {
+  async getStoryComments({ commit, state }) {
+    console.log("getStoryComments");
+
+    let id = state.story.id;
+
     let long = await get("longComment", id);
     let short = await get("shortComment", id);
     commit(types.UPDATE_STORY_COMMENT, [
@@ -166,7 +166,6 @@ export default {
     await dispatch("loading", true);
     let result = await get("list");
     dispatch("getLastDateStories");
-    console.log(result);
     commit(types.UPDATE_LIST, createNewStoryList(result.stories, result.date));
     commit(types.UPDATE_TOPS, createNewStoryList(result.top_stories));
   },

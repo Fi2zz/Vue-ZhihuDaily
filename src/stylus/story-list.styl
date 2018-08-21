@@ -1,83 +1,58 @@
 @import "./vars/vars.styl"
-.view
-  &-title
-    text-align: center
-    height 44px
-    font-size 16px
-    line-height 44px
-    position: fixed
-    top: 0
-    right: 0
-    left: 0
-    z-index: 9
-    &-wrap
-      color $brand-default
-      &-active
-        background $brand-primary
-
-  &-swiper
-    height 240px
-    background-color $brand-primary
-    .swiper-slide
-      height: 240px
+.story-swiper
+  height 240px
+  background-color $brand-primary
+  position: relative;
+  z-index: 7;
+  .swiper-slide
+    height: 240px
 
 .story-list
-    .list-group
-      list-style-type: none
-      padding-left: 0
-      width: 100%
-      flex 1
-      margin: 0
-    .list-group-item
+  .list-group
+    list-style-type: none
+    padding-left: 0
+    width: 100%
+    flex 1
+    margin: 0
+  .list-group-item
+    display: flex
+    flex 1
+    border-bottom 1px #ddd solid
+    justify-content flex-start
+    align-items flex-start
+    height: 64px
+    padding-top: 16px
+    padding-bottom: 16px
+    &-title
+      font-size: 16px
+      font-weight: normal
       display: flex
-      flex 1
-      border-bottom 1px #ddd solid
-      justify-content flex-start
-      align-items flex-start
-      height: 64px
-      padding-top: 16px
-      padding-bottom: 16px
-      &-title
-        font-size: 16px
-        font-weight: normal
-        display: flex
-        flex .7
-        margin: 0
-        padding-top: 0
-        padding-bottom: 0
-        padding-left: 16px
-        line-height 1.5
-        height: 100%
-        padding-right: 16px
-      &-cover
+      flex .7
+      margin: 0
+      padding-top: 0
+      padding-bottom: 0
+      padding-left: 16px
+      line-height 1.5
+      height: 100%
+      padding-right: 16px
+    &-cover
+      width: 100%
+      height: 100%
+      display: block
+    &-image
+      display: flex
+      flex .3
+      align-items center
+      justify-content center
+      height: 100%
+      padding-right: 16px
+      img
         width: 100%
-        height: 100%
         display: block
-      &-image
-        display: flex
-        flex .3
-        align-items center
-        justify-content center
         height: 100%
-        padding-right: 16px
-        img
-          width: 100%
-          display: block
-          height: 100%
-          border: none
-
-
-
-.view-list-title
-  z-index: 9
-  height: 44px
-  &-active
-    position: fixed
-    top: 0
-    right: 0
-    left: 0
-    display: block
-  &-wrap
+        border: none
+  .list-group-item-header
+    z-index: 9
     height: 44px
     max-width 420px
     margin auto
@@ -88,10 +63,6 @@
     font-size: 16px
     transition all ease 300ms
     background $brand-primary
-    &-active
-      background $brand-primary
-
-
 
 .loading
   text-align: center

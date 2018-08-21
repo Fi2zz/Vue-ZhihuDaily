@@ -1,5 +1,5 @@
 <template>
-  <div class="view view-article">
+  <div class="story">
     <div ref="content" v-html="content"></div>
     <div class="story-action">
       <ul class="story-action-list">
@@ -68,6 +68,7 @@ export default {
       this.$router.back({ path: "/" });
     },
     readComments() {
+      this.$store.dispatch("getStoryComments");
       this.$router.push({ path: `/${this.id}/comments` });
     }
   }
