@@ -78,10 +78,9 @@ export default {
       let scrollDown = scrollTop > this.scrollPosition;
       let rect = document.querySelector("ol").getBoundingClientRect();
       let bottom = parseInt(rect.bottom);
-      if (scrollDown) {
-        if (bottom === window.screen.height && this.loading === false) {
-          this.$store.dispatch("getLastDateStories");
-        }
+      let breakpoint = window.screen.height - 44;
+      if (scrollDown && bottom === breakpoint && this.loading === false) {
+        this.$store.dispatch("getLastDateStories");
       }
       this.scrollPosition = scrollTop;
     },

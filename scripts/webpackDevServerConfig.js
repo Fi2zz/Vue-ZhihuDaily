@@ -1,6 +1,7 @@
 const config = require("./config");
-const messageFormatter = require("./webpackMessageFormatter");
-module.exports = {
+const formatWebpackMessages = require("./formatWebpackMessages");
+const chalk = require("chalk");
+const devServerConfig = () => ({
   clientLogLevel: "warning",
   hot: true,
   contentBase: config.devServer.contentBase,
@@ -15,10 +16,14 @@ module.exports = {
     poll: false
   },
   reporter(context, report) {
-    messageFormatter(report.stats, err => {
-      console.log(err.join("\n\n"));
-      // process.exit();
-    });
+    if (report.stats) {
+      report = formatWebpackMessages(report.stats.toJson());
+      if (report.errors.length) {
+        console.log(chalk.red(report.errors.join("\n\n")));
+      }
+    }
   },
   before: require("./api")
-};
+});
+
+module.exports = devServerConfig();
