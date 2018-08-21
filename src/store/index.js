@@ -27,10 +27,9 @@ const store = new Vuex.Store({
   mutations: {
     [types.LOADING]: (state, loading) => (state.loading = loading),
     [types.UPDATE_STORY_INFO]: (state, info) => (state.story.info = info),
-    [types.UPDATE_STORY](state, { id, content }) {
-      state.story.id = id;
-      state.story.content = content;
-    },
+    [types.UPDATE_STORY_CONTENT]: (state, content) =>
+      (state.story.content = content),
+    [types.UPDATE_STORY_ID]: (state, id) => (state.story.id = id),
     [types.UPDATE_STORY_COMMENT]: (state, comments) =>
       (state.story.comments = comments),
     [types.UPDATE_TOPS]: (state, tops) => (state.tops = tops),

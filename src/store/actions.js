@@ -122,13 +122,9 @@ export default {
         }
         return line;
       });
-
     await dispatch("getStoryInfo", { id });
-
-    commit(types.UPDATE_STORY, {
-      content: content.join(""),
-      id: id
-    });
+    commit(types.UPDATE_STORY_ID, id);
+    commit(types.UPDATE_STORY_CONTENT, content.join(""));
   },
 
   async getStoryInfo({ commit }, { id }) {
