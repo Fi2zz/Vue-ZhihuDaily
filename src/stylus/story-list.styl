@@ -14,14 +14,21 @@
       color $brand-default
       &-active
         background $brand-primary
-  &-list
-    &-list
+
+  &-swiper
+    height 240px
+    background-color $brand-primary
+    .swiper-slide
+      height: 240px
+
+.story-list
+    .list-group
       list-style-type: none
       padding-left: 0
       width: 100%
       flex 1
       margin: 0
-    &-item
+    .list-group-item
       display: flex
       flex 1
       border-bottom 1px #ddd solid
@@ -59,10 +66,7 @@
           height: 100%
           border: none
 
-  &-swiper
-    height 240px
-    .swiper-slide
-      height: 240px
+
 
 .view-list-title
   z-index: 9
@@ -89,3 +93,7 @@
 
 
 
+.loading
+  text-align: center
+  padding: 12px
+  font-size: 14px

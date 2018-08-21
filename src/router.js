@@ -1,15 +1,16 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Stories from "./components/list.vue";
-import Story from "./components/article.vue";
-import Comment from "./components/comments.vue";
+import StoryList from "./components/StoryList.vue";
+import Story from "./components/Story.vue";
+import StoryComment from "./components/StoryComment.vue";
+
 Vue.use(Router);
 export default new Router({
   routes: [
     {
       path: "/",
       name: "index",
-      component: Stories
+      component: StoryList
     },
     {
       path: "/:id",
@@ -19,7 +20,7 @@ export default new Router({
     {
       path: "/:id/comments",
       name: "comments",
-      component: Comment
+      component: StoryComment
     }
   ]
 });

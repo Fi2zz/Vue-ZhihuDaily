@@ -4,13 +4,12 @@
   word-break: break-all;
 }
 
+//no more support below IE 11
 @font-face {
-  font-family: 'iconfont';  /* project id 348699 */
-  src: url('//at.alicdn.com/t/font_uifyyu3xd7fu5wmi.eot');
-  src: url('//at.alicdn.com/t/font_uifyyu3xd7fu5wmi.eot?#iefix') format('embedded-opentype'),
-          url('//at.alicdn.com/t/font_uifyyu3xd7fu5wmi.woff') format('woff'),
-          url('//at.alicdn.com/t/font_uifyyu3xd7fu5wmi.ttf') format('truetype'),
-          url('//at.alicdn.com/t/font_uifyyu3xd7fu5wmi.svg#iconfont') format('svg');
+  font-family: 'iconfont';
+  src: url('fonts/iconfont.woff') format('woff'),
+    url('fonts/iconfont.ttf') format('truetype'),
+    url('fonts/iconfont.svg#iconfont') format('svg');
 }
 
 .icon {
@@ -64,6 +63,9 @@ body
   .view-article
     padding-bottom 44px
 
-@import "./list.styl"
-@import "./article.styl"
-@import "./article-comment.styl"
+
+@import "./story-list.styl"
+@import "./story.styl"
+@import "./story-action.styl"
+@import "./comment.styl"
+@import "~swiper/dist/css/swiper.css"

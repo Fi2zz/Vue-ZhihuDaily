@@ -1,11 +1,11 @@
 @import "./vars/vars.styl"
-.view-bar
+.story-action
   height: 44px
   position: fixed
   bottom: 0
   left: 0
   right: 0
-  &-wrap
+  &-list
     display flex
     max-width 420px
     margin auto
@@ -14,6 +14,8 @@
     border-top 1px $brand-gray solid
     align-items center
     justify-content center
+    padding-left: 0
+    list-style: none
   &-item
     display: flex
     width (100% / 5)
@@ -27,6 +29,6 @@
     .text
       font-size: 10px
       position: absolute
-      top: 6px
+      top: 2px
       right: 20%
       color $brand-primary

@@ -20,10 +20,9 @@ export function get(api, query) {
     method: "GET"
   });
   return fetched.then(res => {
-    if (res.status !== 200 && res.status !== 201) {
-      return Promise.reject({ code: res.status, reason: res.json() });
-    } else {
+    if (res.status >= 200 && res.status < 300) {
       return res.json();
     }
+    return Promise.reject({ code: res.status, reason: res.json() });
   });
 }

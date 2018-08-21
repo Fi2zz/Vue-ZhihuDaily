@@ -1,30 +1,31 @@
 <template>
   <div class="view view-article">
-    <div class="app-article-main" ref="content" v-html="story.content"></div>
-    <div class="view-bar">
-      <div class="view-bar-wrap">
-        <div class="view-bar-item view-prev" @click="back">
+    <div ref="content" v-html="content"></div>
+    <div class="story-action">
+      <ul class="story-action-list">
+        <li class="story-action-item story-back" @click="back">
           <span class="icon icon-arrow-left"></span>
-        </div>
-        <div class="view-bar-item view-next"></div>
-        <div class="view-bar-item view-like">
+        </li>
+        <li class="story-action-item"></li>
+        <li class="story-action-item  story-like">
           <span class="icon icon-like"></span>
-          <span class="text">{{story.likes}}</span>
-        </div>
-        <div class="view-bar-item view-share">
+          <span class="text">{{info.like}}</span>
+        </li>
+        <li class="story-action-item story-share">
           <span class="icon icon-share"></span>
-        </div>
-        <div class="view-bar-item view-comments" @click="readComments">
+        </li>
+        <li class="story-action-item story-comments" @click="readComments">
           <span class="icon icon-comment"></span>
-          <span class="text">{{story.totalCommentSize}}</span>
-        </div>
-      </div>
+          <span class="text">{{info.total}}</span>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
+
 export default {
   name: "Story",
   data() {
@@ -34,8 +35,9 @@ export default {
   },
   computed: {
     ...mapState({
-      story: state => state.story,
-      id: state => state.story.id
+      content: state => state.story.content,
+      id: state => state.story.id,
+      info: state => state.story.info
     })
   },
   beforeRouteEnter(from, to, next) {
@@ -59,14 +61,14 @@ export default {
           clearInterval(timer);
           return false;
         }
-        this.$store.dispatch("getStoryInfo", { id: this.story.id });
+        this.$store.dispatch("getStoryInfo", { id: this.id });
       }, 5000);
     },
     back() {
       this.$router.back({ path: "/" });
     },
     readComments() {
-      this.$router.push({ path: `/${this.story.id}/comments` });
+      this.$router.push({ path: `/${this.id}/comments` });
     }
   }
 };

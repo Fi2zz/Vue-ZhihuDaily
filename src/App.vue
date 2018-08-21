@@ -3,11 +3,8 @@
     <router-view></router-view>
   </div>
 </template>
-<style lang="stylus" src="./stylus/main.styl"></style>
 <script>
-  export default {
-    name: "VueZhihuDaily"
-  };
+export default {
+  name: "App"
+};
 </script>
-
-
