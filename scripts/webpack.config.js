@@ -9,7 +9,6 @@ const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const config = require("./config");
 const resolve = dir => path.join(__dirname, "..", dir);
 const assetsPath = _path => path.posix.join("./static", _path);
-
 module.exports = function webpackConfig(mode) {
   const styleLoader = loaderType => {
     let loaders = [
@@ -17,8 +16,22 @@ module.exports = function webpackConfig(mode) {
       mode === "development" ? "style-loader" : MiniCssExtractPlugin.loader,
       "css-loader"
     ];
-    if (loaderType) {
+    if (loaderType !== "stylus") {
       loaders.push(`${loaderType}-loader`);
+    } else {
+      loaders.push({
+        loader: `stylus-loader`,
+        options: {
+          import: [
+            path.resolve(__dirname, "../src/stylus/vars.styl"),
+            path.resolve(__dirname, "../src/stylus/normallize.styl"),
+            "~swiper/dist/css/swiper.css"
+          ]
+        }
+      });
+    }
+
+    if (loaderType === "stylus") {
     }
 
     return loaders;

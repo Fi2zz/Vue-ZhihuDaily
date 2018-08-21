@@ -1,11 +1,10 @@
 <template>
-  <div class="comments view-comment">
+  <div class="comments">
     <div class="view-header">
       <div class="view-header-wrap">{{info.total}}条点评
       </div>
     </div>
-    <div class="view-comment-content comment-group">
-      <ul class="view-comment-list list-group">
+      <ul class="list-group">
         <template v-for="(item,index) in comments">
           <li :key="index" class="list-group-header" v-if="item.type==='heading'">
             <h3 v-text="item.label"></h3>
@@ -32,7 +31,6 @@
 
 
       </ul>
-    </div>
     <div class="view-bar">
       <div class="view-bar-wrap">
         <div class="post-a-comment">写评论</div>
@@ -50,6 +48,14 @@ export default {
       comments: state => state.story.comments,
       info: state => state.story.info
     })
+  },
+  methods: {
+    ...mapActions(["getStoryComments"])
+  },
+  beforeRouteEnter(from, to, next) {
+    next(vm => {
+      vm.getStoryComments(from.params.id);
+    });
   }
 };
 </script>

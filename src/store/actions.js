@@ -132,10 +132,8 @@ export default {
       total: data.comments
     });
   },
-  async getStoryComments({ commit, state }) {
-    console.log("getStoryComments");
-
-    let id = state.story.id;
+  async getStoryComments({ commit, state }, id) {
+    console.log("getStoryComments", id);
 
     let long = await get("longComment", id);
     let short = await get("shortComment", id);

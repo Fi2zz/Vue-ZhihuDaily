@@ -24,53 +24,49 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+  import {mapState, mapActions} from "vuex";
 
-export default {
-  name: "Story",
-  data() {
-    return {
-      cleanTimer: false
-    };
-  },
-  computed: {
-    ...mapState({
-      content: state => state.story.content,
-      id: state => state.story.id,
-      info: state => state.story.info
-    })
-  },
-  beforeRouteEnter(from, to, next) {
-    next(vm => {
-      vm.getStory(from.params);
-      vm.fetchInfo();
-    });
-  },
-  mounted() {
-    this.fetchInfo();
-  },
-  beforeRouteLeave(to, from, next) {
-    this.cleanTimer = true;
-    next();
-  },
-  methods: {
-    ...mapActions(["getStory"]),
-    fetchInfo(id) {
-      let timer = setInterval(() => {
-        if (this.cleanTimer) {
-          clearInterval(timer);
-          return false;
-        }
-        this.$store.dispatch("getStoryInfo", { id: this.id });
-      }, 5000);
+  export default {
+    name: "Story",
+    data() {
+      return {
+        cleanTimer: false,
+        timer: null
+      };
     },
-    back() {
-      this.$router.back({ path: "/" });
+    computed: {
+      ...mapState({
+        content: state => state.story.content,
+        id: state => state.story.id,
+        info: state => state.story.info
+      })
     },
-    readComments() {
-      this.$store.dispatch("getStoryComments");
-      this.$router.push({ path: `/${this.id}/comments` });
+    beforeRouteEnter(from, to, next) {
+      next(vm => {
+        vm.getStory(from.params);
+        vm.fetchInfo();
+      });
+    },
+    beforeRouteLeave(to, from, next) {
+      clearInterval(this.timer);
+      this.timer = null;
+      next();
+    },
+    methods: {
+      ...mapActions(["getStory", "getStoryInfo", "getStoryComments"]),
+      fetchInfo(id) {
+        this.timer = setInterval(() => {
+          this.getStoryInfo({id: this.id});
+        }, 5000);
+      },
+      back() {
+        clearInterval(this.timer);
+        this.timer = null;
+        this.$router.back({path: "/"});
+      },
+      readComments() {
+        this.$router.push({path: `/${this.id}/comments`});
+      }
     }
-  }
-};
+  };
 </script>
