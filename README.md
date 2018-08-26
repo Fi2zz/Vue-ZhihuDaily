@@ -1,3 +1,14 @@
+
+# Vue ZhihuDaily - Vue 知乎日报
+
+```javascript
+vue+vuex+vue-router
+```
+
+<a href="https://github.com/Fi2zz/react-zhihudaily"> React 版本知乎日报</a>
+
+
+
 ## Api来源
    <a href="https://github.com/Fi2zz/ZhihuDailyPurify"> 知乎日报·净化</a>
 ## 知乎日报图片防盗链解决方法
