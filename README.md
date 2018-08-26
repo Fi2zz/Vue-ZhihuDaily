@@ -21,7 +21,7 @@ vue+vuex+vue-router
    3.长评短评论展示
 
 ## 使用
-   1.克隆     `$ git clone https://github.com/Fi2zz/Vue-ZhihuDaily.git`
+   1.克隆     `$ git clone https://github.com/Fi2zz/vue-zhihudaily.git`
 
    2.安装     `npm install | yarn`
 
