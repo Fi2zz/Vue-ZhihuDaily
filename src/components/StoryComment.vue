@@ -1,8 +1,7 @@
 <template>
   <div class="comments">
     <div class="view-header">
-      <div class="view-header-wrap">{{info.total}}条点评
-      </div>
+      <div class="view-header-wrap">{{info.total}}条点评</div>
     </div>
       <ul class="list-group">
         <template v-for="(item,index) in comments">
@@ -22,14 +21,10 @@
             </div>
             <div class="content">
               {{item.content}}
-              <small style="display: block;margin-top: 8px;">
-                {{(item.time)}}
-              </small>
+              <small style="display: block;margin-top: 8px;">{{(item.time)}}</small>
             </div>
           </li>
         </template>
-
-
       </ul>
     <div class="view-bar">
       <div class="view-bar-wrap">
@@ -40,7 +35,6 @@
 </template>
 <script>
 import { mapState, mapActions } from "vuex";
-
 export default {
   name: "Comments",
   computed: {
