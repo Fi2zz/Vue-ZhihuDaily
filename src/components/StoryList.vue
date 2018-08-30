@@ -34,7 +34,6 @@
     <div v-show="loading" class="loading">加载中</div>
   </div>
 </template>
-
 <script>
 import { mapState } from "vuex";
 import Swiper from "swiper";
