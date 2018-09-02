@@ -10,7 +10,7 @@ vue+vuex+vue-router
 
 
 ## Api来源
-   <a href="https://github.com/Fi2zz/ZhihuDailyPurify"> 知乎日报·净化</a>
+   <a href="https://github.com/izzyleung/ZhihuDailyPurify"> 知乎日报·净化</a>
 ## 知乎日报图片防盗链解决方法
     添加 <meta name="referrer" content="never">
 
